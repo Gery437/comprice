@@ -1,4 +1,4 @@
-// נתוני דמו — מוצרים, חנויות ומחירים לדוגמה
+// נתוני דמו — מוצרים, חנויות ומחירים
 
 export const CHAINS = {
   shufersal: { name: 'שופרסל',     color: '#e31b23', logo: '🛒' },
@@ -8,517 +8,626 @@ export const CHAINS = {
   yeinot:    { name: 'יינות ביתן', color: '#b45309', logo: '🍷' },
   yohananof: { name: 'יוחננוף',    color: '#16a34a', logo: '🟢' },
   osher:     { name: 'אושר עד',    color: '#dc2626', logo: '⭐' },
+  yesh:      { name: 'יש חסד',     color: '#0891b2', logo: '💙' },
 }
 
 export const STORES = [
-  // ── גוש דן ותל אביב ──
-  { id:  1, chain: 'shufersal', branch: 'שופרסל דיל תל אביב - דיזנגוף',  address: 'דיזנגוף 50, תל אביב',        lat: 32.0809, lng: 34.7740 },
-  { id:  2, chain: 'ramilevi',  branch: 'רמי לוי גבעתיים',                address: 'קוסמאי 2, גבעתיים',          lat: 32.0685, lng: 34.8125 },
-  { id:  3, chain: 'mega',      branch: 'מגה בול רמת גן',                 address: 'ביאליק 40, רמת גן',          lat: 32.0853, lng: 34.8227 },
-  { id:  4, chain: 'victory',   branch: 'ויקטורי תל אביב - הצפון',        address: 'אבן גבירול 105, תל אביב',    lat: 32.0908, lng: 34.7812 },
-  { id:  5, chain: 'shufersal', branch: 'שופרסל אקספרס רמת החייל',        address: 'שדרות המעיין 6, תל אביב',    lat: 32.1103, lng: 34.8324 },
-  { id:  6, chain: 'yeinot',    branch: 'יינות ביתן ראשון לציון',          address: 'הרצל 74, ראשון לציון',       lat: 31.9629, lng: 34.8010 },
-  { id:  7, chain: 'mega',      branch: 'מגה בול פתח תקווה',              address: "ז'בוטינסקי 7, פתח תקווה",   lat: 32.0879, lng: 34.8874 },
-  { id:  8, chain: 'ramilevi',  branch: 'רמי לוי חולון',                  address: 'סוקולוב 100, חולון',         lat: 32.0176, lng: 34.7769 },
-  { id:  9, chain: 'osher',     branch: 'אושר עד תל אביב - לב העיר',      address: 'אלנבי 50, תל אביב',          lat: 32.0700, lng: 34.7820 },
-  { id: 10, chain: 'yohananof', branch: 'יוחננוף תל אביב - פלורנטין',     address: 'וולפסון 2, תל אביב',         lat: 32.0570, lng: 34.7730 },
-  { id: 11, chain: 'victory',   branch: 'ויקטורי בת ים',                  address: 'בן גוריון 50, בת ים',        lat: 32.0200, lng: 34.7500 },
-  { id: 12, chain: 'shufersal', branch: 'שופרסל דיל ראשון לציון',         address: 'רוטשילד 20, ראשון לציון',    lat: 31.9700, lng: 34.8000 },
-  { id: 13, chain: 'osher',     branch: 'אושר עד חולון',                  address: "ז'בוטינסקי 30, חולון",       lat: 32.0100, lng: 34.7720 },
-  { id: 14, chain: 'yohananof', branch: 'יוחננוף גבעת שמואל',             address: 'ויצמן 1, גבעת שמואל',       lat: 32.0760, lng: 34.8480 },
-  { id: 15, chain: 'mega',      branch: 'מגה בול כפר סבא',                address: 'ויצמן 10, כפר סבא',          lat: 32.1730, lng: 34.9070 },
-  // ── שרון ומרכז ──
-  { id: 16, chain: 'ramilevi',  branch: 'רמי לוי נתניה',                  address: 'הרצל 12, נתניה',             lat: 32.3300, lng: 34.8570 },
-  { id: 17, chain: 'shufersal', branch: 'שופרסל דיל כפר סבא',            address: 'ויצמן 26, כפר סבא',          lat: 32.1754, lng: 34.9077 },
-  { id: 18, chain: 'yeinot',    branch: 'יינות ביתן הרצליה',              address: 'סוקולוב 2, הרצליה',          lat: 32.1580, lng: 34.8430 },
-  { id: 19, chain: 'yohananof', branch: 'יוחננוף רעננה',                  address: 'אחוזה 50, רעננה',            lat: 32.1840, lng: 34.8710 },
-  { id: 20, chain: 'victory',   branch: 'ויקטורי נתניה - עיר ימים',       address: 'רבין 15, נתניה',             lat: 32.3215, lng: 34.8532 },
-  // ── ירושלים ──
-  { id: 21, chain: 'shufersal', branch: 'שופרסל דיל ירושלים - מלחה',     address: 'קניון מלחה, ירושלים',        lat: 31.7476, lng: 35.1883 },
-  { id: 22, chain: 'ramilevi',  branch: 'רמי לוי ירושלים - תלפיות',      address: 'פייר קניג 6, ירושלים',       lat: 31.7523, lng: 35.2198 },
-  { id: 23, chain: 'mega',      branch: 'מגה ירושלים - גילה',             address: 'גילה, ירושלים',              lat: 31.7300, lng: 35.1700 },
-  { id: 24, chain: 'victory',   branch: 'ויקטורי ירושלים - גבעת שאול',   address: 'גבעת שאול, ירושלים',         lat: 31.7860, lng: 35.1780 },
-  { id: 25, chain: 'osher',     branch: 'אושר עד ירושלים - מרכז',         address: 'יפו 100, ירושלים',           lat: 31.7780, lng: 35.2200 },
-  { id: 26, chain: 'yeinot',    branch: 'יינות ביתן ירושלים - קטמון',     address: 'עזה 5, ירושלים',             lat: 31.7600, lng: 35.2100 },
-  { id: 27, chain: 'yohananof', branch: 'יוחננוף ירושלים - רמות',         address: 'גולדברג 3, ירושלים',         lat: 31.8200, lng: 35.2000 },
-  { id: 28, chain: 'ramilevi',  branch: 'רמי לוי מעלה אדומים',            address: 'יצחק רבין, מעלה אדומים',    lat: 31.7800, lng: 35.2990 },
-  // ── חיפה והצפון ──
-  { id: 29, chain: 'shufersal', branch: 'שופרסל דיל חיפה - הקריות',      address: 'חוצות המפרץ, קריית ביאליק', lat: 32.8340, lng: 35.0820 },
-  { id: 30, chain: 'ramilevi',  branch: 'רמי לוי חיפה - קניון לב',       address: 'קניון לב המפרץ, חיפה',       lat: 32.8184, lng: 35.0037 },
-  { id: 31, chain: 'mega',      branch: 'מגה נהריה',                      address: 'גאולה 1, נהריה',             lat: 33.0050, lng: 35.0970 },
-  { id: 32, chain: 'victory',   branch: 'ויקטורי חיפה - הדר',             address: 'הנביאים 40, חיפה',           lat: 32.8100, lng: 35.0000 },
-  { id: 33, chain: 'yohananof', branch: 'יוחננוף קריית אתא',              address: 'אחד העם 5, קריית אתא',      lat: 32.7960, lng: 35.1080 },
-  { id: 34, chain: 'osher',     branch: 'אושר עד עכו',                    address: 'בן עמי 20, עכו',             lat: 32.9240, lng: 35.0760 },
-  { id: 35, chain: 'yeinot',    branch: 'יינות ביתן קריית שמונה',          address: 'תל חי 1, קריית שמונה',      lat: 33.2070, lng: 35.5710 },
-  { id: 36, chain: 'shufersal', branch: 'שופרסל דיל טבריה',               address: 'הגליל 10, טבריה',            lat: 32.7940, lng: 35.5310 },
-  { id: 37, chain: 'yohananof', branch: 'יוחננוף נוף הגליל',              address: 'המלאכה 3, נוף הגליל',       lat: 32.7040, lng: 35.3270 },
-  // ── באר שבע והנגב ──
-  { id: 38, chain: 'shufersal', branch: 'שופרסל דיל באר שבע - גרנד',     address: 'קניון גרנד, באר שבע',        lat: 31.2530, lng: 34.7920 },
-  { id: 39, chain: 'ramilevi',  branch: 'רמי לוי באר שבע',                address: 'נחל עשן 1, באר שבע',         lat: 31.2601, lng: 34.7992 },
-  { id: 40, chain: 'yeinot',    branch: 'יינות ביתן אשדוד',               address: 'יצחק רגר 4, אשדוד',          lat: 31.8044, lng: 34.6553 },
-  { id: 41, chain: 'osher',     branch: 'אושר עד אשקלון',                 address: 'בן גוריון 20, אשקלון',       lat: 31.6580, lng: 34.5710 },
-  { id: 42, chain: 'victory',   branch: 'ויקטורי אילת',                   address: 'התמר 5, אילת',               lat: 29.5577, lng: 34.9519 },
-  { id: 43, chain: 'mega',      branch: 'מגה דימונה',                     address: 'הפלמ"ח 3, דימונה',          lat: 31.0650, lng: 35.0330 },
-  { id: 44, chain: 'shufersal', branch: 'שופרסל דיל קריית גת',            address: 'העצמאות 1, קריית גת',       lat: 31.6100, lng: 34.7640 },
-  { id: 45, chain: 'yohananof', branch: 'יוחננוף אשדוד',                  address: 'הנביאים 8, אשדוד',           lat: 31.8000, lng: 34.6490 },
-  // ── מרכז ומישור השרון ──
-  { id: 46, chain: 'ramilevi',  branch: 'רמי לוי מודיעין',                address: 'קניון מודיעין, מודיעין',     lat: 31.9040, lng: 35.0000 },
-  { id: 47, chain: 'yohananof', branch: 'יוחננוף רחובות',                 address: 'הרצל 30, רחובות',            lat: 31.8960, lng: 34.8080 },
-  { id: 48, chain: 'victory',   branch: 'ויקטורי לוד',                    address: 'שמחוני 10, לוד',             lat: 31.9510, lng: 34.8950 },
-  { id: 49, chain: 'shufersal', branch: 'שופרסל דיל רמלה',                address: 'בלפור 5, רמלה',              lat: 31.9280, lng: 34.8720 },
-  { id: 50, chain: 'mega',      branch: 'מגה בול נס ציונה',               address: 'הרצל 40, נס ציונה',          lat: 31.9300, lng: 34.7980 },
+  // ── גוש דן ──
+  { id:  1, chain:'shufersal', branch:'שופרסל דיל תל אביב - דיזנגוף',  address:'דיזנגוף 50, תל אביב',        lat:32.0809,lng:34.7740},
+  { id:  2, chain:'ramilevi',  branch:'רמי לוי גבעתיים',                address:'קוסמאי 2, גבעתיים',          lat:32.0685,lng:34.8125},
+  { id:  3, chain:'mega',      branch:'מגה בול רמת גן',                 address:'ביאליק 40, רמת גן',          lat:32.0853,lng:34.8227},
+  { id:  4, chain:'victory',   branch:'ויקטורי תל אביב - הצפון',        address:'אבן גבירול 105, תל אביב',    lat:32.0908,lng:34.7812},
+  { id:  5, chain:'shufersal', branch:'שופרסל אקספרס רמת החייל',        address:'שדרות המעיין 6, תל אביב',    lat:32.1103,lng:34.8324},
+  { id:  6, chain:'yeinot',    branch:'יינות ביתן ראשון לציון',          address:'הרצל 74, ראשון לציון',       lat:31.9629,lng:34.8010},
+  { id:  7, chain:'mega',      branch:'מגה בול פתח תקווה',              address:"ז'בוטינסקי 7, פתח תקווה",   lat:32.0879,lng:34.8874},
+  { id:  8, chain:'ramilevi',  branch:'רמי לוי חולון',                  address:'סוקולוב 100, חולון',         lat:32.0176,lng:34.7769},
+  { id:  9, chain:'osher',     branch:'אושר עד תל אביב - לב העיר',      address:'אלנבי 50, תל אביב',          lat:32.0700,lng:34.7820},
+  { id: 10, chain:'yohananof', branch:'יוחננוף תל אביב - פלורנטין',     address:'וולפסון 2, תל אביב',         lat:32.0570,lng:34.7730},
+  { id: 11, chain:'victory',   branch:'ויקטורי בת ים',                  address:'בן גוריון 50, בת ים',        lat:32.0200,lng:34.7500},
+  { id: 12, chain:'shufersal', branch:'שופרסל דיל ראשון לציון',         address:'רוטשילד 20, ראשון לציון',    lat:31.9700,lng:34.8000},
+  { id: 13, chain:'yesh',      branch:'יש חסד תל אביב',                 address:'יגאל אלון 70, תל אביב',      lat:32.0660,lng:34.7900},
+  { id: 14, chain:'yohananof', branch:'יוחננוף גבעת שמואל',             address:'ויצמן 1, גבעת שמואל',        lat:32.0760,lng:34.8480},
+  { id: 15, chain:'mega',      branch:'מגה בול כפר סבא',                address:'ויצמן 10, כפר סבא',          lat:32.1730,lng:34.9070},
+  { id: 16, chain:'ramilevi',  branch:'רמי לוי נתניה',                  address:'הרצל 12, נתניה',             lat:32.3300,lng:34.8570},
+  { id: 17, chain:'shufersal', branch:'שופרסל דיל כפר סבא',            address:'ויצמן 26, כפר סבא',          lat:32.1754,lng:34.9077},
+  { id: 18, chain:'yeinot',    branch:'יינות ביתן הרצליה',              address:'סוקולוב 2, הרצליה',          lat:32.1580,lng:34.8430},
+  { id: 19, chain:'yohananof', branch:'יוחננוף רעננה',                  address:'אחוזה 50, רעננה',            lat:32.1840,lng:34.8710},
+  { id: 20, chain:'victory',   branch:'ויקטורי נתניה - עיר ימים',       address:'רבין 15, נתניה',             lat:32.3215,lng:34.8532},
+  { id: 21, chain:'shufersal', branch:'שופרסל דיל ירושלים - מלחה',     address:'קניון מלחה, ירושלים',        lat:31.7476,lng:35.1883},
+  { id: 22, chain:'ramilevi',  branch:'רמי לוי ירושלים - תלפיות',      address:'פייר קניג 6, ירושלים',       lat:31.7523,lng:35.2198},
+  { id: 23, chain:'mega',      branch:'מגה ירושלים - גילה',             address:'גילה, ירושלים',              lat:31.7300,lng:35.1700},
+  { id: 24, chain:'victory',   branch:'ויקטורי ירושלים - גבעת שאול',   address:'גבעת שאול, ירושלים',         lat:31.7860,lng:35.1780},
+  { id: 25, chain:'osher',     branch:'אושר עד ירושלים - מרכז',         address:'יפו 100, ירושלים',           lat:31.7780,lng:35.2200},
+  { id: 26, chain:'yeinot',    branch:'יינות ביתן ירושלים - קטמון',     address:'עזה 5, ירושלים',             lat:31.7600,lng:35.2100},
+  { id: 27, chain:'yesh',      branch:'יש חסד ירושלים',                 address:'בצלאל 35, ירושלים',          lat:31.7840,lng:35.2150},
+  { id: 28, chain:'ramilevi',  branch:'רמי לוי מעלה אדומים',            address:'יצחק רבין, מעלה אדומים',    lat:31.7800,lng:35.2990},
+  { id: 29, chain:'shufersal', branch:'שופרסל דיל חיפה - הקריות',      address:'חוצות המפרץ, קריית ביאליק', lat:32.8340,lng:35.0820},
+  { id: 30, chain:'ramilevi',  branch:'רמי לוי חיפה - קניון לב',       address:'קניון לב המפרץ, חיפה',       lat:32.8184,lng:35.0037},
+  { id: 31, chain:'mega',      branch:'מגה נהריה',                      address:'גאולה 1, נהריה',             lat:33.0050,lng:35.0970},
+  { id: 32, chain:'victory',   branch:'ויקטורי חיפה - הדר',             address:'הנביאים 40, חיפה',           lat:32.8100,lng:35.0000},
+  { id: 33, chain:'yohananof', branch:'יוחננוף קריית אתא',              address:'אחד העם 5, קריית אתא',      lat:32.7960,lng:35.1080},
+  { id: 34, chain:'yesh',      branch:'יש חסד חיפה',                    address:'הנמל 5, חיפה',               lat:32.8200,lng:34.9900},
+  { id: 35, chain:'yeinot',    branch:'יינות ביתן קריית שמונה',          address:'תל חי 1, קריית שמונה',      lat:33.2070,lng:35.5710},
+  { id: 36, chain:'shufersal', branch:'שופרסל דיל טבריה',               address:'הגליל 10, טבריה',            lat:32.7940,lng:35.5310},
+  { id: 37, chain:'yohananof', branch:'יוחננוף נוף הגליל',              address:'המלאכה 3, נוף הגליל',       lat:32.7040,lng:35.3270},
+  { id: 38, chain:'shufersal', branch:'שופרסל דיל באר שבע - גרנד',     address:'קניון גרנד, באר שבע',        lat:31.2530,lng:34.7920},
+  { id: 39, chain:'ramilevi',  branch:'רמי לוי באר שבע',                address:'נחל עשן 1, באר שבע',         lat:31.2601,lng:34.7992},
+  { id: 40, chain:'yeinot',    branch:'יינות ביתן אשדוד',               address:'יצחק רגר 4, אשדוד',          lat:31.8044,lng:34.6553},
+  { id: 41, chain:'osher',     branch:'אושר עד אשקלון',                 address:'בן גוריון 20, אשקלון',       lat:31.6580,lng:34.5710},
+  { id: 42, chain:'yesh',      branch:'יש חסד באר שבע',                 address:'רגר 14, באר שבע',            lat:31.2480,lng:34.7870},
+  { id: 43, chain:'mega',      branch:'מגה דימונה',                     address:'הפלמ"ח 3, דימונה',          lat:31.0650,lng:35.0330},
+  { id: 44, chain:'shufersal', branch:'שופרסל דיל קריית גת',            address:'העצמאות 1, קריית גת',       lat:31.6100,lng:34.7640},
+  { id: 45, chain:'yohananof', branch:'יוחננוף אשדוד',                  address:'הנביאים 8, אשדוד',           lat:31.8000,lng:34.6490},
+  { id: 46, chain:'ramilevi',  branch:'רמי לוי מודיעין',                address:'קניון מודיעין, מודיעין',     lat:31.9040,lng:35.0000},
+  { id: 47, chain:'yohananof', branch:'יוחננוף רחובות',                 address:'הרצל 30, רחובות',            lat:31.8960,lng:34.8080},
+  { id: 48, chain:'victory',   branch:'ויקטורי לוד',                    address:'שמחוני 10, לוד',             lat:31.9510,lng:34.8950},
+  { id: 49, chain:'shufersal', branch:'שופרסל דיל רמלה',                address:'בלפור 5, רמלה',              lat:31.9280,lng:34.8720},
+  { id: 50, chain:'mega',      branch:'מגה בול נס ציונה',               address:'הרצל 40, נס ציונה',          lat:31.9300,lng:34.7980},
+  { id: 51, chain:'yesh',      branch:'יש חסד ראשון לציון',             address:'ויצמן 12, ראשון לציון',      lat:31.9650,lng:34.7950},
+  { id: 52, chain:'yesh',      branch:'יש חסד פתח תקווה',               address:'זבוטינסקי 50, פתח תקווה',   lat:32.0920,lng:34.8800},
+  { id: 53, chain:'yesh',      branch:'יש חסד נתניה',                   address:'הרצל 30, נתניה',             lat:32.3280,lng:34.8550},
+  { id: 54, chain:'yesh',      branch:'יש חסד אשדוד',                   address:'השקמה 3, אשדוד',             lat:31.8060,lng:34.6510},
+  { id: 55, chain:'osher',     branch:'אושר עד חולון',                  address:"ז'בוטינסקי 30, חולון",       lat:32.0100,lng:34.7720},
+  { id: 56, chain:'osher',     branch:'אושר עד גבעתיים',                address:'קוסמאי 10, גבעתיים',         lat:32.0700,lng:34.8100},
+  { id: 57, chain:'yohananof', branch:'יוחננוף ירושלים - רמות',         address:'גולדברג 3, ירושלים',         lat:31.8200,lng:35.2000},
+  { id: 58, chain:'victory',   branch:'ויקטורי אילת',                   address:'התמר 5, אילת',               lat:29.5577,lng:34.9519},
 ]
 
-export const PRODUCTS = [
-  // ── מוצרי חלב ──
-  { id:   1, barcode: '7290000066622', name: 'חלב תנובה 3% שומן',           brand: 'תנובה',      category: 'מוצרי חלב',   unit: '1 ליטר',    image: '🥛' },
-  { id:   5, barcode: '7290000694870', name: 'קוטג׳ 5% שומן',               brand: 'תנובה',      category: 'מוצרי חלב',   unit: '250 גרם',   image: '🧀' },
-  { id:   7, barcode: '7290005266564', name: 'יוגורט פרי תפוח-שזיף',        brand: 'דנונה',      category: 'מוצרי חלב',   unit: '150 גרם',   image: '🍶' },
-  { id:  11, barcode: '7290000066639', name: 'חלב גולדן 1% שומן',           brand: 'תנובה',      category: 'מוצרי חלב',   unit: '1 ליטר',    image: '🥛' },
-  { id:  12, barcode: '7290000066646', name: 'שמנת מתוקה 38%',              brand: 'תנובה',      category: 'מוצרי חלב',   unit: '250 מ״ל',  image: '🫙' },
-  { id:  13, barcode: '7290000066653', name: 'גבינה צהובה גאודה פרוסה',     brand: 'תנובה',      category: 'גבינות',       unit: '200 גרם',   image: '🧀' },
-  { id:  14, barcode: '7290000066660', name: 'גבינה לבנה 5%',               brand: 'תנובה',      category: 'גבינות',       unit: '250 גרם',   image: '🫙' },
-  { id:  15, barcode: '7290000066677', name: 'חמאה מלוחה',                  brand: 'תנובה',      category: 'מוצרי חלב',   unit: '200 גרם',   image: '🧈' },
-  { id: 200, barcode: '7290000066684', name: 'גבינה בולגרית 5%',            brand: 'תנובה',      category: 'גבינות',       unit: '200 גרם',   image: '🫙' },
-  { id: 201, barcode: '7290000066691', name: 'גבינה עמק פרוסה',             brand: 'תנובה',      category: 'גבינות',       unit: '200 גרם',   image: '🧀' },
-  { id: 202, barcode: '7290000066708', name: 'שמנת חמוצה 15%',              brand: 'תנובה',      category: 'מוצרי חלב',   unit: '200 מ״ל',  image: '🫙' },
-  { id: 203, barcode: '7290000066715', name: 'לבן 1%',                      brand: 'תנובה',      category: 'מוצרי חלב',   unit: '500 מ״ל',  image: '🥛' },
-  { id: 204, barcode: '7290000066722', name: 'קפיר 1.5%',                   brand: 'תנובה',      category: 'מוצרי חלב',   unit: '500 מ״ל',  image: '🥛' },
-  { id: 205, barcode: '7290005266571', name: 'ריקוטה טרייה',                brand: 'גד',         category: 'גבינות',       unit: '250 גרם',   image: '🫙' },
-  { id: 206, barcode: '7290005266588', name: 'יוגורט ביו טבעי',             brand: 'דנונה',      category: 'מוצרי חלב',   unit: '150 גרם',   image: '🍶' },
-  { id: 207, barcode: '7290005266595', name: 'גבינה קשה פרמזן',             brand: 'גד',         category: 'גבינות',       unit: '100 גרם',   image: '🧀' },
-  { id: 208, barcode: '7290005266601', name: 'חלב סויה',                    brand: 'אלפרו',      category: 'מוצרי חלב',   unit: '1 ליטר',    image: '🥛' },
-  { id: 209, barcode: '7290005266618', name: 'לאבנה',                       brand: 'שטראוס',     category: 'גבינות',       unit: '250 גרם',   image: '🫙' },
+// ── מחולל מוצרים ──
+function _makeProds() {
+  const all = []
+  let id = 1000
+  const bc = () => `7290${String(id * 13 + 1000000).slice(0,9)}`
+  const p = (name, brand, category, unit, image) =>
+    all.push({ id: id++, barcode: bc(), name, brand, category, unit, image })
 
-  // ── לחם ומאפים ──
-  { id:   2, barcode: '7290107235592', name: 'לחם אחיד פרוס',               brand: 'תנובה',      category: 'לחם ומאפים',  unit: 'כיכר',      image: '🍞' },
-  { id:  16, barcode: '7290107235609', name: 'לחם שיפון כהה',               brand: 'אחלה',       category: 'לחם ומאפים',  unit: 'כיכר',      image: '🍞' },
-  { id:  17, barcode: '7290107235616', name: 'פיתות מחיטה מלאה 6 יחידות',  brand: 'אחלה',       category: 'לחם ומאפים',  unit: 'שקית',      image: '🫓' },
-  { id:  18, barcode: '7290107235623', name: 'לחמניות שומשום 6 יחידות',     brand: 'לחם הארץ',   category: 'לחם ומאפים',  unit: 'שקית',      image: '🍞' },
-  { id: 210, barcode: '7290107235630', name: 'לחם כוסמין מלא',              brand: 'אחלה',       category: 'לחם ומאפים',  unit: 'כיכר',      image: '🍞' },
-  { id: 211, barcode: '7290107235647', name: 'בייגלה ירושלמי',              brand: 'לחם הארץ',   category: 'לחם ומאפים',  unit: 'שקית',      image: '🥨' },
-  { id: 212, barcode: '7290107235654', name: 'קרואסון חמאה',                brand: 'ברייד',      category: 'לחם ומאפים',  unit: 'שקית',      image: '🥐' },
-  { id: 213, barcode: '7290107235661', name: 'לחם שיפון גרמני',             brand: 'לחם הארץ',   category: 'לחם ומאפים',  unit: 'כיכר',      image: '🍞' },
-  { id: 214, barcode: '7290107235678', name: 'לחמניות חמאה 6 יחידות',       brand: 'ברייד',      category: 'לחם ומאפים',  unit: 'שקית',      image: '🍞' },
+  // חלב
+  for (const fat of ['1%','1.5%','3%','5%'])
+    for (const sz of ['500 מ״ל','1 ליטר','2 ליטר'])
+      for (const br of ['תנובה','גד','שטראוס','טרה'])
+        p(`חלב ${fat} שומן`,br,'מוצרי חלב',sz,'🥛')
 
-  // ── ירקות ──
-  { id:   6, barcode: '0000000000061', name: 'עגבניות שרי',                 brand: 'תוצרת הארץ', category: 'ירקות',        unit: '500 גרם',   image: '🍅' },
-  { id:  20, barcode: '0000000000201', name: 'עגבניות שדה',                 brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🍅' },
-  { id:  21, barcode: '0000000000211', name: 'מלפפון',                      brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥒' },
-  { id:  22, barcode: '0000000000221', name: 'פלפל אדום',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🫑' },
-  { id:  23, barcode: '0000000000231', name: 'פלפל צהוב',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🫑' },
-  { id:  24, barcode: '0000000000241', name: 'גזר',                         brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥕' },
-  { id:  25, barcode: '0000000000251', name: 'בצל',                         brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🧅' },
-  { id:  26, barcode: '0000000000261', name: 'שום',                         brand: 'תוצרת הארץ', category: 'ירקות',        unit: '250 גרם',   image: '🧄' },
-  { id:  27, barcode: '0000000000271', name: 'חסה איסבג',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'יחידה',     image: '🥬' },
-  { id:  28, barcode: '0000000000281', name: 'ברוקולי',                     brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'יחידה',     image: '🥦' },
-  { id:  29, barcode: '0000000000291', name: 'כרובית',                      brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'יחידה',     image: '🥦' },
-  { id:  30, barcode: '0000000000301', name: 'תפוח אדמה',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥔' },
-  { id:  31, barcode: '0000000000311', name: 'בטטה',                        brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🍠' },
-  { id:  32, barcode: '0000000000321', name: 'זוקיני',                      brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥒' },
-  { id:  33, barcode: '0000000000331', name: 'חצילים',                      brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🍆' },
-  { id:  34, barcode: '0000000000341', name: 'אפונה ירוקה קפואה',           brand: 'סנפרוסט',    category: 'ירקות',        unit: '500 גרם',   image: '🟢' },
-  { id:  35, barcode: '0000000000351', name: 'תירס מתוק',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'יחידה',     image: '🌽' },
-  { id: 215, barcode: '0000000002151', name: 'כרוב ירוק',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥬' },
-  { id: 216, barcode: '0000000002161', name: 'פטריות שמפיניון',             brand: 'תוצרת הארץ', category: 'ירקות',        unit: '250 גרם',   image: '🍄' },
-  { id: 217, barcode: '0000000002171', name: 'שעועית ירוקה',                brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🫘' },
-  { id: 218, barcode: '0000000002181', name: 'פלפל ירוק',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🫑' },
-  { id: 219, barcode: '0000000002191', name: 'כרוב סגול',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥬' },
-  { id: 220, barcode: '0000000002201', name: 'פטרוזיליה',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'צרור',      image: '🌿' },
-  { id: 221, barcode: '0000000002211', name: 'כוסברה',                      brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'צרור',      image: '🌿' },
-  { id: 222, barcode: '0000000002221', name: 'סלרי',                        brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🌿' },
-  { id: 223, barcode: '0000000002231', name: 'עירית',                       brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'צרור',      image: '🌿' },
-  { id: 224, barcode: '0000000002241', name: 'חציל סיני',                   brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🍆' },
-  { id: 225, barcode: '0000000002251', name: 'לפת',                         brand: 'תוצרת הארץ', category: 'ירקות',        unit: 'ק״ג',       image: '🥔' },
+  // יוגורט בטעמים
+  for (const fl of ['תות','תפוח','מנגו','אוכמניות','לימון','תפוז','אפרסק','בננה','קוקוס','פסיפלורה','רימון','מלון','שזיף','וניל','גחלילית'])
+    for (const br of ['תנובה','דנונה','שטראוס'])
+      for (const sz of ['100 גרם','150 גרם','200 גרם'])
+        p(`יוגורט ${fl}`,br,'מוצרי חלב',sz,'🍶')
 
-  // ── פירות ──
-  { id:  40, barcode: '0000000000401', name: 'תפוחי גרנד סמיט',            brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍏' },
-  { id:  41, barcode: '0000000000411', name: 'תפוחי פינק ליידי',            brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍎' },
-  { id:  42, barcode: '0000000000421', name: 'בננות',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍌' },
-  { id:  43, barcode: '0000000000431', name: 'תפוזים',                      brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍊' },
-  { id:  44, barcode: '0000000000441', name: 'לימונים',                     brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍋' },
-  { id:  45, barcode: '0000000000451', name: 'ענבים אדומים',                brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍇' },
-  { id:  46, barcode: '0000000000461', name: 'ענבים ירוקים',                brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍇' },
-  { id:  47, barcode: '0000000000471', name: 'אבטיח',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍉' },
-  { id:  48, barcode: '0000000000481', name: 'מלון',                        brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍈' },
-  { id:  49, barcode: '0000000000491', name: 'תותים',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: '250 גרם',   image: '🍓' },
-  { id:  50, barcode: '0000000000501', name: 'אבוקדו',                      brand: 'תוצרת הארץ', category: 'פירות',        unit: 'יחידה',     image: '🥑' },
-  { id:  51, barcode: '0000000000511', name: 'מנגו אלפונסו',                brand: 'תוצרת הארץ', category: 'פירות',        unit: 'יחידה',     image: '🥭' },
-  { id:  52, barcode: '0000000000521', name: 'אננס',                        brand: 'תוצרת הארץ', category: 'פירות',        unit: 'יחידה',     image: '🍍' },
-  { id:  53, barcode: '0000000000531', name: 'קלמנטינות',                   brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍊' },
-  { id:  54, barcode: '0000000000541', name: 'אפרסקים',                     brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍑' },
-  { id:  55, barcode: '0000000000551', name: 'שזיפים',                      brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🫐' },
-  { id:  56, barcode: '0000000000561', name: 'אגסים',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍐' },
-  { id: 226, barcode: '0000000002261', name: 'קיווי',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🥝' },
-  { id: 227, barcode: '0000000002271', name: 'רימון',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍎' },
-  { id: 228, barcode: '0000000002281', name: 'תמרים מג׳הול',               brand: 'ד"ר נחמיאס', category: 'פירות',        unit: '500 גרם',   image: '🌴' },
-  { id: 229, barcode: '0000000002291', name: 'דובדבנים',                    brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍒' },
-  { id: 230, barcode: '0000000002301', name: 'נקטרינות',                    brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍑' },
-  { id: 231, barcode: '0000000002311', name: 'פפאיה',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'ק״ג',       image: '🍈' },
-  { id: 232, barcode: '0000000002321', name: 'בלימה',                       brand: 'תוצרת הארץ', category: 'פירות',        unit: 'יחידה',     image: '🍋' },
+  // יוגורט יווני
+  for (const fat of ['0%','2%','5%','9%'])
+    for (const br of ['תנובה','דנונה','שטראוס'])
+      for (const sz of ['150 גרם','200 גרם','500 גרם'])
+        p(`יוגורט יווני ${fat}`,br,'מוצרי חלב',sz,'🍶')
 
-  // ── בשר ועוף ──
-  { id:  10, barcode: '7290009876543', name: 'חזה עוף טרי',                 brand: 'עוף טוב',    category: 'בשר ועוף',    unit: 'ק״ג',       image: '🍗' },
-  { id:  60, barcode: '7290009876550', name: 'שוקיים עוף',                  brand: 'עוף טוב',    category: 'בשר ועוף',    unit: 'ק״ג',       image: '🍗' },
-  { id:  61, barcode: '7290009876567', name: 'כנפיים עוף',                  brand: 'עוף טוב',    category: 'בשר ועוף',    unit: 'ק״ג',       image: '🍗' },
-  { id:  62, barcode: '7290009876574', name: 'בשר טחון בקר 80%',           brand: 'מוסרה',      category: 'בשר ועוף',    unit: 'ק״ג',       image: '🥩' },
-  { id:  63, barcode: '7290009876581', name: 'אנטריקוט בקר טרי',           brand: 'מוסרה',      category: 'בשר ועוף',    unit: 'ק״ג',       image: '🥩' },
-  { id: 233, barcode: '7290009876598', name: 'פרגיות עוף',                  brand: 'עוף טוב',    category: 'בשר ועוף',    unit: 'ק״ג',       image: '🍗' },
-  { id: 234, barcode: '7290009876604', name: 'נקניקיות עוף',                brand: 'אסם',        category: 'בשר ועוף',    unit: '300 גרם',   image: '🌭' },
-  { id: 235, barcode: '7290009876611', name: 'בשר טחון עוף',                brand: 'עוף טוב',    category: 'בשר ועוף',    unit: 'ק״ג',       image: '🍗' },
-  { id: 236, barcode: '7290009876628', name: 'כבד עוף',                     brand: 'עוף טוב',    category: 'בשר ועוף',    unit: 'ק״ג',       image: '🍗' },
+  // קוטג׳
+  for (const fat of ['3%','5%','9%'])
+    for (const br of ['תנובה','גד','שטראוס'])
+      for (const sz of ['250 גרם','500 גרם'])
+        p(`קוטג׳ ${fat}`,br,'גבינות',sz,'🧀')
 
-  // ── דגים ──
-  { id:  70, barcode: '7290001111110', name: 'פילה סלמון טרי',              brand: 'טוב טעם',    category: 'דגים',         unit: 'ק״ג',       image: '🐟' },
-  { id:  71, barcode: '7290001111127', name: 'פילה דניס טרי',               brand: 'טוב טעם',    category: 'דגים',         unit: 'ק״ג',       image: '🐟' },
-  { id:  72, barcode: '7290001111134', name: 'טונה בשמן זית שימורים',       brand: 'כרמית',      category: 'דגים',         unit: '170 גרם',   image: '🐟' },
-  { id: 237, barcode: '7290001111141', name: 'דג אמנון טרי',                brand: 'טוב טעם',    category: 'דגים',         unit: 'ק״ג',       image: '🐟' },
-  { id: 238, barcode: '7290001111158', name: 'שרימפס קפוא',                 brand: 'טוב טעם',    category: 'דגים',         unit: '500 גרם',   image: '🦐' },
-  { id: 239, barcode: '7290001111165', name: 'קלמרי טבעות',                 brand: 'טוב טעם',    category: 'דגים',         unit: 'ק״ג',       image: '🦑' },
+  // גבינה לבנה
+  for (const fat of ['3%','5%','9%'])
+    for (const br of ['תנובה','גד','שטראוס'])
+      for (const sz of ['250 גרם','500 גרם'])
+        p(`גבינה לבנה ${fat}`,br,'גבינות',sz,'🫙')
 
-  // ── ביצים ──
-  { id:   3, barcode: '7290000696874', name: 'ביצים L גדולות 12 יחידות',   brand: 'אגמון',      category: 'ביצים',        unit: 'קרטון',     image: '🥚' },
-  { id:  80, barcode: '7290000696881', name: 'ביצים XL ענק 12 יחידות',     brand: 'אגמון',      category: 'ביצים',        unit: 'קרטון',     image: '🥚' },
+  // גבינה צהובה
+  for (const type of ['גאודה','אמנטל','צ׳דר','מוצרלה','עמק','צהובה רגילה'])
+    for (const form of ['פרוסה','גוש','מגורד'])
+      for (const br of ['תנובה','גד','שטראוס'])
+        for (const sz of ['200 גרם','400 גרם'])
+          p(`גבינה ${type} ${form}`,br,'גבינות',sz,'🧀')
 
-  // ── שמנים ומרכיבים ──
-  { id:   4, barcode: '7290004534213', name: 'שמן זית כתית מעולה',          brand: 'יד מרדכי',   category: 'שמנים',        unit: '750 מ״ל',  image: '🫒' },
-  { id:  90, barcode: '7290004534220', name: 'שמן קנולה',                   brand: 'שמן טוב',    category: 'שמנים',        unit: '1 ליטר',    image: '🫙' },
-  { id:  91, barcode: '7290004534237', name: 'סוכר לבן',                    brand: 'שוגר לייף',  category: 'מרכיבים',      unit: 'ק״ג',       image: '🍬' },
-  { id:  92, barcode: '7290004534244', name: 'קמח לבן',                     brand: 'שבולת',      category: 'מרכיבים',      unit: 'ק״ג',       image: '🌾' },
-  { id:  93, barcode: '7290004534251', name: 'אורז בסמטי',                  brand: 'ריצ׳מן',     category: 'פסטה ואורז',   unit: 'ק״ג',       image: '🍚' },
+  // שמנת וחמאה
+  for (const fat of ['15%','27%','38%'])
+    for (const br of ['תנובה','גד','שטראוס'])
+      for (const sz of ['200 מ״ל','250 מ״ל'])
+        p(`שמנת ${fat==='15%'?'חמוצה':'מתוקה'} ${fat}`,br,'מוצרי חלב',sz,'🫙')
+  for (const type of ['מלוחה','תפלה'])
+    for (const br of ['תנובה','נורו','לור'])
+      for (const sz of ['100 גרם','200 גרם','500 גרם'])
+        p(`חמאה ${type}`,br,'מוצרי חלב',sz,'🧈')
 
-  // ── פסטה ──
-  { id:   8, barcode: '7290000689419', name: 'פסטה ספגטי',                  brand: 'ברילה',      category: 'פסטה ואורז',   unit: '500 גרם',   image: '🍝' },
-  { id:  94, barcode: '7290000689426', name: 'פסטה פנה',                    brand: 'ברילה',      category: 'פסטה ואורז',   unit: '500 גרם',   image: '🍝' },
-  { id:  95, barcode: '7290000689433', name: 'פסטה פרפרים',                 brand: 'ברילה',      category: 'פסטה ואורז',   unit: '500 גרם',   image: '🍝' },
+  // חלב צמחי
+  for (const type of ['חלב שקדים','חלב שיבולת שועל','חלב סויה','חלב קוקוס'])
+    for (const br of ['אלפרו','Oatly','Alpro'])
+      p(type,br,'מוצרי חלב','1 ליטר','🥛')
 
-  // ── שתייה ──
-  { id:   9, barcode: '7290001234567', name: 'מים מינרלים',                 brand: 'נביעות',     category: 'שתייה',        unit: '1.5 ליטר',  image: '💧' },
-  { id: 100, barcode: '7290001234574', name: 'מים מינרלים',                 brand: 'מי עדן',     category: 'שתייה',        unit: '1.5 ליטר',  image: '💧' },
-  { id: 101, barcode: '7290001234581', name: 'קולה',                        brand: 'קוקה קולה',  category: 'שתייה',        unit: '1.5 ליטר',  image: '🥤' },
-  { id: 102, barcode: '7290001234598', name: 'מיץ תפוזים סחוט',             brand: 'טרופיקנה',   category: 'שתייה',        unit: '1 ליטר',    image: '🧃' },
-  { id: 103, barcode: '7290001234604', name: 'קפה נמס',                     brand: 'נסקפה',      category: 'שתייה',        unit: '200 גרם',   image: '☕' },
-  { id: 104, barcode: '7290001234611', name: 'תה ירוק',                     brand: 'ויסוצקי',    category: 'שתייה',        unit: '25 שקיות',  image: '🍵' },
-  { id: 254, barcode: '7290001234618', name: 'ספרייט',                      brand: 'קוקה קולה',  category: 'שתייה',        unit: '1.5 ליטר',  image: '🥤' },
-  { id: 255, barcode: '7290001234625', name: 'פנטה תפוז',                   brand: 'קוקה קולה',  category: 'שתייה',        unit: '1.5 ליטר',  image: '🥤' },
-  { id: 256, barcode: '7290001234632', name: 'מים עם גז',                   brand: 'ישראל מים',  category: 'שתייה',        unit: '1.5 ליטר',  image: '💧' },
-  { id: 257, barcode: '7290001234649', name: 'אייס טי לימון',               brand: 'ליפטון',     category: 'שתייה',        unit: '1.5 ליטר',  image: '🍵' },
-  { id: 258, barcode: '7290001234656', name: 'רד בול',                      brand: 'רד בול',     category: 'שתייה',        unit: '250 מ״ל',  image: '⚡' },
-  { id: 259, barcode: '7290001234663', name: 'מיץ תפוחים טבעי',             brand: 'טרופיקנה',   category: 'שתייה',        unit: '1 ליטר',    image: '🧃' },
-  { id: 260, barcode: '7290001234670', name: 'חלב שוקו',                    brand: 'שטראוס',     category: 'שתייה',        unit: '1 ליטר',    image: '🥛' },
-  { id: 261, barcode: '7290001234687', name: 'קפה טחון',                    brand: 'ארומה',      category: 'שתייה',        unit: '250 גרם',   image: '☕' },
-  { id: 262, barcode: '7290001234694', name: 'תה צמחים',                    brand: 'ויסוצקי',    category: 'שתייה',        unit: '25 שקיות',  image: '🍵' },
+  // לחם
+  for (const type of ['לחם לבן פרוס','לחם חיטה מלאה','לחם שיפון','לחם כוסמין','לחם מולטי-דגן','לחם שאור','לחם ללא גלוטן','לחם שיפון גרמני'])
+    for (const br of ['תנובה','אחלה','לחם הארץ','ברייד'])
+      p(type,br,'לחם ומאפים','כיכר','🍞')
 
-  // ── חטיפים ומתוקים ──
-  { id: 110, barcode: '7290002222201', name: 'שוקולד מריר 70%',             brand: 'עלית',       category: 'מתוקים',       unit: '100 גרם',   image: '🍫' },
-  { id: 111, barcode: '7290002222218', name: 'במבה',                        brand: 'אסם',        category: 'חטיפים',       unit: '80 גרם',    image: '🍿' },
-  { id: 112, barcode: '7290002222225', name: 'ביסלי גריל',                  brand: 'אסם',        category: 'חטיפים',       unit: '70 גרם',    image: '🍿' },
-  { id: 113, barcode: '7290002222232', name: 'דבש טבעי',                    brand: 'יד מרדכי',   category: 'מתוקים',       unit: '500 גרם',   image: '🍯' },
-  { id: 264, barcode: '7290002222249', name: 'פרינגלס מקורי',               brand: 'פרינגלס',    category: 'חטיפים',       unit: '165 גרם',   image: '🍿' },
-  { id: 265, barcode: '7290002222256', name: 'צ׳יפס טייסטי',               brand: 'אסם',        category: 'חטיפים',       unit: '80 גרם',    image: '🍟' },
-  { id: 266, barcode: '7290002222263', name: 'ריץ׳',                        brand: 'נביסקו',     category: 'חטיפים',       unit: '200 גרם',   image: '🍘' },
-  { id: 267, barcode: '7290002222270', name: 'אוראו',                       brand: 'נביסקו',     category: 'מתוקים',       unit: '154 גרם',   image: '🍪' },
-  { id: 268, barcode: '7290002222287', name: 'שוקולד חלב מילקה',            brand: 'מונדלז',     category: 'מתוקים',       unit: '100 גרם',   image: '🍫' },
-  { id: 269, barcode: '7290002222294', name: 'גרנולה',                      brand: 'ניצן',       category: 'חטיפים',       unit: '500 גרם',   image: '🌾' },
-  { id: 270, barcode: '7290002222300', name: 'שקדים קלויים מלוחים',         brand: 'תמרוץ',      category: 'חטיפים',       unit: '200 גרם',   image: '🌰' },
-  { id: 271, barcode: '7290002222317', name: 'אגוזי מלך',                   brand: 'תמרוץ',      category: 'חטיפים',       unit: '200 גרם',   image: '🌰' },
-  { id: 272, barcode: '7290002222324', name: 'פיסטוק',                      brand: 'תמרוץ',      category: 'חטיפים',       unit: '200 גרם',   image: '🌰' },
-  { id: 273, barcode: '7290002222331', name: 'פופקורן חמאה',                brand: 'אסם',        category: 'חטיפים',       unit: '80 גרם',    image: '🍿' },
+  for (const type of ['פיתות רגילות 8 יח׳','פיתות מחיטה מלאה 8 יח׳','פיתות קטנות 10 יח׳','לאפה 5 יח׳','טורטייה 8 יח׳'])
+    for (const br of ['אחלה','תנובה','ברייד'])
+      p(type,br,'לחם ומאפים','שקית','🫓')
 
-  // ── קפואים ──
-  { id: 274, barcode: '7290006666001', name: 'פיצה מרגריטה',                brand: 'שטראוס',     category: 'קפואים',       unit: '400 גרם',   image: '🍕' },
-  { id: 275, barcode: '7290006666018', name: 'גלידת שוקולד',                brand: 'ארטיק',      category: 'קפואים',       unit: '500 מ״ל',  image: '🍦' },
-  { id: 276, barcode: '7290006666025', name: 'ירקות קפואים מעורבים',        brand: 'סנפרוסט',    category: 'קפואים',       unit: '500 גרם',   image: '🥦' },
-  { id: 277, barcode: '7290006666032', name: 'שניצל עוף קפוא',              brand: 'תנובה',      category: 'קפואים',       unit: '500 גרם',   image: '🍗' },
-  { id: 278, barcode: '7290006666049', name: 'פלאפל קפוא',                  brand: 'תנובה',      category: 'קפואים',       unit: '500 גרם',   image: '🧆' },
-  { id: 279, barcode: '7290006666056', name: 'גלידת וניל',                  brand: 'ארטיק',      category: 'קפואים',       unit: '1 ליטר',    image: '🍦' },
+  for (const type of ['לחמניות שומשום 6 יח׳','לחמניות חמאה 6 יח׳','לחמניות המבורגר 6 יח׳','בייגלה ירושלמי','בגט צרפתי','לחמניות כוסמין 6 יח׳'])
+    for (const br of ['לחם הארץ','ברייד','אחלה'])
+      p(type,br,'לחם ומאפים','שקית','🍞')
 
-  // ── שימורים ורטבים ──
-  { id: 240, barcode: '7290007777001', name: 'רסק עגבניות',                 brand: 'אסם',        category: 'שימורים',      unit: '200 גרם',   image: '🍅' },
-  { id: 241, barcode: '7290007777018', name: 'שימורי תירס',                 brand: 'גרינפילד',   category: 'שימורים',      unit: '425 גרם',   image: '🌽' },
-  { id: 242, barcode: '7290007777025', name: 'שימורי חומוס',                brand: 'גרינפילד',   category: 'שימורים',      unit: '400 גרם',   image: '🫘' },
-  { id: 243, barcode: '7290007777032', name: 'ממרח שוקולד ואגוזים',         brand: 'נוטלה',      category: 'ממרחים',       unit: '200 גרם',   image: '🍫' },
-  { id: 244, barcode: '7290007777049', name: 'חמאת בוטנים',                 brand: 'שטראוס',     category: 'ממרחים',       unit: '340 גרם',   image: '🥜' },
-  { id: 245, barcode: '7290007777056', name: 'ריבת תות',                    brand: 'שטראוס',     category: 'ממרחים',       unit: '340 גרם',   image: '🍓' },
-  { id: 246, barcode: '7290007777063', name: 'מיונז',                       brand: 'הלמן',       category: 'רטבים',        unit: '430 גרם',   image: '🫙' },
-  { id: 247, barcode: '7290007777070', name: 'קטשופ',                       brand: 'היינץ',      category: 'רטבים',        unit: '500 גרם',   image: '🍅' },
-  { id: 248, barcode: '7290007777087', name: 'טחינה גולמית',                brand: 'אל ארז',     category: 'ממרחים',       unit: '500 גרם',   image: '🌰' },
-  { id: 249, barcode: '7290007777094', name: 'חומוס מוכן',                  brand: 'תבורי',      category: 'ממרחים',       unit: '400 גרם',   image: '🫘' },
-  { id: 250, barcode: '7290007777100', name: 'רוטב עגבניות לפסטה',          brand: 'אסם',        category: 'רטבים',        unit: '500 גרם',   image: '🍝' },
+  for (const type of ['קרואסון חמאה','בורקס גבינה','בורקס תפוח אדמה','בורקס פטריות','רוגלה שוקולד'])
+    for (const br of ['ברייד','מאפיית גירוסט'])
+      p(type,br,'לחם ומאפים','שקית','🥐')
 
-  // ── ניקיון ──
-  { id: 120, barcode: '7290003333301', name: 'אבקת כביסה',                  brand: 'אריאל',      category: 'ניקיון',       unit: '3 ק״ג',     image: '🧺' },
-  { id: 121, barcode: '7290003333318', name: 'נוזל כלים',                   brand: 'פיירי',      category: 'ניקיון',       unit: '500 מ״ל',  image: '🧴' },
-  { id: 122, barcode: '7290003333325', name: 'נייר טואלט 10 גלילות',        brand: 'נגה',        category: 'ניקיון',       unit: '10 גלילות', image: '🧻' },
-  { id: 281, barcode: '7290003333332', name: 'ג׳ל כביסה נוזלי',            brand: 'אריאל',      category: 'ניקיון',       unit: '1 ליטר',    image: '🧴' },
-  { id: 282, barcode: '7290003333349', name: 'מרכך כביסה',                  brand: 'סנלן',       category: 'ניקיון',       unit: '1 ליטר',    image: '🧴' },
-  { id: 283, barcode: '7290003333356', name: 'חומר ניקוי רב-שימושי',        brand: 'מיסטר מאסל', category: 'ניקיון',       unit: '750 מ״ל',  image: '🧹' },
-  { id: 284, barcode: '7290003333363', name: 'שקיות אשפה גדולות',           brand: 'שחם',        category: 'ניקיון',       unit: '30 יחידות', image: '🗑️' },
-  { id: 285, barcode: '7290003333370', name: 'נייר אלומיניום',              brand: 'עמינח',      category: 'ניקיון',       unit: "50 מ'",     image: '🫙' },
-  { id: 286, barcode: '7290003333387', name: 'נייר מגבת',                   brand: 'פלנטי',      category: 'ניקיון',       unit: '2 גלילות',  image: '🧻' },
+  // ירקות
+  for (const [name,unit,img] of [
+    ['עגבניות שדה','ק״ג','🍅'],['עגבניות שרי','500 גרם','🍅'],['עגבניות מין','ק״ג','🍅'],
+    ['מלפפון','ק״ג','🥒'],['מלפפון מיני','500 גרם','🥒'],
+    ['פלפל אדום','ק״ג','🫑'],['פלפל צהוב','ק״ג','🫑'],['פלפל ירוק','ק״ג','🫑'],['פלפל כתום','ק״ג','🫑'],['פלפל חריף','200 גרם','🌶️'],
+    ['גזר','ק״ג','🥕'],['גזר מיני','400 גרם','🥕'],
+    ['בצל לבן','ק״ג','🧅'],['בצל סגול','ק״ג','🧅'],['שום','250 גרם','🧄'],
+    ['תפוח אדמה','ק״ג','🥔'],['תפוח אדמה אדום','ק״ג','🥔'],['בטטה','ק״ג','🍠'],['בטטה סגולה','ק״ג','🍠'],
+    ['זוקיני','ק״ג','🥒'],['חצילים','ק״ג','🍆'],['חציל סיני','ק״ג','🍆'],
+    ['ברוקולי','יחידה','🥦'],['כרובית','יחידה','🥦'],['כרוב ירוק','ק״ג','🥬'],['כרוב סגול','ק״ג','🥬'],
+    ['חסה רומנית','יחידה','🥬'],['חסה איסבג','יחידה','🥬'],['חסה אדומה','יחידה','🥬'],
+    ['תרד','צרור','🌿'],['עירית','צרור','🌿'],['פטרוזיליה','צרור','🌿'],['כוסברה','צרור','🌿'],
+    ['נענע','צרור','🌿'],['בזיליקום','צרור','🌿'],['שמיר','צרור','🌿'],['רוקט','צרור','🌿'],
+    ['סלרי','ק״ג','🌿'],['כרשה','ק״ג','🌿'],['פטריות שמפיניון','250 גרם','🍄'],['פטריות פורטובלו','250 גרם','🍄'],
+    ['שעועית ירוקה','ק״ג','🫘'],['אפונה טרייה','500 גרם','🟢'],['תירס','יחידה','🌽'],
+    ['דלעת','ק״ג','🎃'],['קישוא','ק״ג','🥒'],['לפת','ק״ג','🥔'],['אספרגוס','500 גרם','🌿'],
+    ['עגבנייה ירוקה','ק״ג','🍅'],['בוק צ׳וי','250 גרם','🥬'],
+  ]) {
+    p(name,'תוצרת הארץ','ירקות',unit,img)
+    p(`${name} אורגני`,'אורגניק+','ירקות',unit,img)
+  }
 
-  // ── טיפוח אישי ──
-  { id: 288, barcode: '7290008888001', name: 'שמפו',                        brand: 'פנטין',      category: 'טיפוח',        unit: '400 מ״ל',  image: '🧴' },
-  { id: 289, barcode: '7290008888018', name: 'מרכך שיער',                   brand: 'פנטין',      category: 'טיפוח',        unit: '400 מ״ל',  image: '🧴' },
-  { id: 290, barcode: '7290008888025', name: 'ג׳ל מקלחת',                  brand: 'ניוויאה',    category: 'טיפוח',        unit: '250 מ״ל',  image: '🧴' },
-  { id: 291, barcode: '7290008888032', name: 'דאודורנט',                    brand: 'דאב',        category: 'טיפוח',        unit: '150 מ״ל',  image: '🧴' },
-  { id: 292, barcode: '7290008888049', name: 'משחת שיניים',                 brand: 'קולגייט',    category: 'טיפוח',        unit: '75 מ״ל',   image: '🦷' },
-  { id: 293, barcode: '7290008888056', name: 'נייר טואלט 12 גלילות',        brand: 'לוטוס',      category: 'טיפוח',        unit: '12 גלילות', image: '🧻' },
-  { id: 294, barcode: '7290008888063', name: 'ממחטות נייר',                 brand: 'קלינקס',     category: 'טיפוח',        unit: '10 חבילות', image: '🤧' },
+  // פירות
+  for (const [name,unit,img] of [
+    ['תפוחי גרנד סמיט','ק״ג','🍏'],['תפוחי פינק ליידי','ק״ג','🍎'],['תפוחי פוג׳י','ק״ג','🍎'],
+    ['תפוחי גאלה','ק״ג','🍎'],['תפוחי גולדן','ק״ג','🍎'],
+    ['בננות','ק״ג','🍌'],['תפוזים שמוטי','ק״ג','🍊'],['תפוזים נאוולינה','ק״ג','🍊'],
+    ['קלמנטינות','ק״ג','🍊'],['מנדרינות','ק״ג','🍊'],['לימונים','ק״ג','🍋'],['ליים','ק״ג','🍋'],
+    ['ענבים אדומים','ק״ג','🍇'],['ענבים ירוקים','ק״ג','🍇'],['ענבים שחורים','ק״ג','🍇'],
+    ['תותים','250 גרם','🍓'],['אבוקדו','יחידה','🥑'],['אבטיח','ק״ג','🍉'],['מלון','ק״ג','🍈'],
+    ['אפרסקים','ק״ג','🍑'],['נקטרינות','ק״ג','🍑'],['שזיפים','ק״ג','🫐'],['אגסים','ק״ג','🍐'],
+    ['מנגו','יחידה','🥭'],['אננס','יחידה','🍍'],['קיווי','ק״ג','🥝'],['קיווי צהוב','ק״ג','🥝'],
+    ['רימון','ק״ג','🍎'],['תמרים מג׳הול','500 גרם','🌴'],['דובדבנים','ק״ג','🍒'],
+    ['פפאיה','ק״ג','🍈'],['בלימה','יחידה','🍋'],['ליצ׳י','ק״ג','🫐'],['פסיפלורה','ק״ג','🫐'],
+    ['תאנים','ק״ג','🍇'],['דמשקאות','250 גרם','🍓'],['צבר','ק״ג','🎃'],['חרוב','ק״ג','🌰'],
+    ['ענבי מסקאט','ק״ג','🍇'],['קיווי בר','ק״ג','🥝'],
+  ])
+    p(name,'תוצרת הארץ','פירות',unit,img)
+
+  // בשר עוף
+  for (const [cut,unit] of [
+    ['חזה עוף טרי','ק״ג'],['פרגיות','ק״ג'],['שוקיים','ק״ג'],['כנפיים','ק״ג'],
+    ['ירך שלם','ק״ג'],['בשר טחון עוף','ק״ג'],['כבד עוף','ק״ג'],['לב עוף','ק״ג'],
+    ['עוף שלם','ק״ג'],['שיניצל עוף','ק״ג'],
+  ])
+    for (const br of ['עוף טוב','זוגלובק','דיאמנד'])
+      p(`${cut} עוף`,br,'בשר ועוף',unit,'🍗')
+
+  for (const [cut,unit] of [
+    ['בשר טחון בקר 80%','ק״ג'],['אנטריקוט','ק״ג'],['צלעות בקר','ק״ג'],
+    ['כתף בקר','ק״ג'],['שייטל','ק״ג'],['פילה בקר','ק״ג'],['אוסובוקו','ק״ג'],
+  ])
+    for (const br of ['מוסרה','נח׳שון','טיב טעם'])
+      p(cut,br,'בשר ועוף',unit,'🥩')
+
+  for (const [name,sz] of [
+    ['נקניקיות עוף','300 גרם'],['פסטרמה','200 גרם'],['המבורגר עוף','400 גרם'],
+    ['שניצל קפוא','500 גרם'],['קציצות בקר','400 גרם'],['נקניק פרנקפורטר','300 גרם'],
+  ])
+    for (const br of ['זוגלובק','אסם','שפר סל'])
+      p(name,br,'בשר ועוף',sz,'🌭')
+
+  // דגים
+  for (const [name,unit] of [
+    ['פילה סלמון טרי','ק״ג'],['פילה דניס','ק״ג'],['דג אמנון','ק״ג'],
+    ['פילה לוקוס','ק״ג'],['פילה בקלה','ק״ג'],['פילה בורי','ק״ג'],['קרפיון','ק״ג'],
+  ])
+    p(name,'טוב טעם','דגים',unit,'🐟')
+
+  for (const name of ['טונה בשמן זית','טונה במים','סרדינים בשמן','מקרל','סלמון שימורים'])
+    for (const br of ['כרמית','פרינסס טונה','ים טוב'])
+      for (const sz of ['80 גרם','170 גרם','340 גרם'])
+        p(`${name} שימורים`,br,'דגים',sz,'🐟')
+
+  for (const [name,sz] of [['שרימפס קפוא','500 גרם'],['קלמרי טבעות','500 גרם'],['פילה נילוס','ק״ג']])
+    p(name,'טוב טעם','דגים',sz,'🦐')
+
+  // ביצים
+  for (const sz of ['M','L','XL'])
+    for (const br of ['אגמון','ביצת הזהב','מגדלי'])
+      for (const qty of ['6 יחידות','12 יחידות','30 יחידות'])
+        p(`ביצים ${sz}`,br,'ביצים',qty,'🥚')
+
+  // שמנים
+  for (const [name,brands,sizes] of [
+    ['שמן זית כתית מעולה',['יד מרדכי','ברית','ברוקמן'],['250 מ״ל','500 מ״ל','750 מ״ל']],
+    ['שמן קנולה',['שמן טוב','מזרח'],['1 ליטר','2 ליטר','5 ליטר']],
+    ['שמן חמניות',['שמן טוב','מזרח'],['1 ליטר','2 ליטר']],
+    ['שמן שומשום',['אחלה','יממה'],['250 מ״ל','500 מ״ל']],
+    ['שמן קוקוס',['כושרי','נטור'],['300 מ״ל','500 מ״ל']],
+    ['שמן זית Extra Virgin',['Gallo','ברית'],['500 מ״ל','750 מ״ל']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'שמנים',sz,'🫒')
+
+  // קמח וסוכר
+  for (const type of ['קמח לבן','קמח חיטה מלאה','קמח כוסמין','קמח תפח','קמח ללא גלוטן','קמח שיפון'])
+    for (const br of ['שבולת','מחטה','כרמל'])
+      for (const sz of ['1 ק״ג','2 ק״ג'])
+        p(type,br,'מרכיבים',sz,'🌾')
+
+  for (const type of ['סוכר לבן','סוכר חום','סוכר קנה','אבקת סוכר'])
+    for (const br of ['שוגר לייף','ז׳ולייה'])
+      for (const sz of ['1 ק״ג','2 ק״ג'])
+        p(type,br,'מרכיבים',sz,'🍬')
+
+  for (const type of ['מלח שולחן','מלח גס','מלח ים'])
+    p(type,'מלחי ים','מרכיבים','500 גרם','🧂')
+
+  // אורז ופסטה
+  for (const type of ['אורז בסמטי','אורז עגול','אורז מלא','אורז יסמין','אורז ארבוריו'])
+    for (const br of ["ריצ'מן","Ben's Original",'טוחן'])
+      for (const sz of ['1 ק״ג','2 ק״ג'])
+        p(type,br,'פסטה ואורז',sz,'🍚')
+
+  for (const shape of ['ספגטי','פנה','פרפרים','ריגטוני','פוזילי','לינגוויני','קאסה׳','פפרדלה','גנוצ׳י','אורקייטה'])
+    for (const br of ['ברילה','דה צ׳קו','גרנדי'])
+      for (const sz of ['250 גרם','500 גרם'])
+        p(`פסטה ${shape}`,br,'פסטה ואורז',sz,'🍝')
+
+  // קטניות
+  for (const [name,sz] of [
+    ['עדשים אדומות','500 גרם'],['עדשים ירוקות','500 גרם'],['חומוס יבש','500 גרם'],
+    ['שעועית לבנה','500 גרם'],['שעועית שחורה','500 גרם'],['כוסמת','500 גרם'],
+    ['קינואה','500 גרם'],['גריסים','500 גרם'],['פולי סויה','500 גרם'],
+  ])
+    for (const br of ['יממה','תבורי','שבולת'])
+      p(name,br,'קטניות',sz,'🫘')
+
+  // תבלינים
+  for (const spice of [
+    'כמון','כורכום','פלפל שחור','פלפל אדום','קינמון','אגוז מוסקט','פפריקה מתוקה',
+    'פפריקה חריפה','בהרת','זעתר','זעפרן','הל','ג׳ינג׳ר','תימין','רוזמרין','אורגנו',
+    'בזיליקום יבש','עלי דפנה','ונילין','סומק','חילבה','עמבה','כוסברה טחונה','קארי','חרדל גרגרים',
+  ])
+    for (const br of ['תבשיל','כרמל','ZIYAD'])
+      p(`תבלין ${spice}`,br,'תבלינים','100 גרם','🌿')
+
+  // מים
+  for (const br of ['נביעות','מי עדן','ישראל מים','שטראוס','אפרת'])
+    for (const sz of ['500 מ״ל','1.5 ליטר','2 ליטר'])
+      p('מים מינרלים',br,'שתייה',sz,'💧')
+
+  for (const br of ['נביעות','ישראל מים'])
+    for (const sz of ['500 מ״ל','1.5 ליטר'])
+      p('מים עם גז',br,'שתייה',sz,'💧')
+
+  // שתייה קלה
+  for (const [name,br] of [
+    ['קוקה קולה','קוקה קולה'],['קולה דיאט','קוקה קולה'],['קולה זירו','קוקה קולה'],
+    ['ספרייט','קוקה קולה'],['פנטה תפוז','קוקה קולה'],['פנטה ענבים','קוקה קולה'],
+    ['פפסי','פפסי'],['פפסי מקס','פפסי'],['מאונטן דיו','פפסי'],
+    ['רד בול','רד בול'],['רד בול טרופי','רד בול'],['מונסטר','מונסטר'],
+  ])
+    for (const sz of ['330 מ״ל','500 מ״ל','1.5 ליטר','2 ליטר'])
+      p(name,br,'שתייה',sz,'🥤')
+
+  // מיצים
+  for (const [name,img] of [
+    ['מיץ תפוזים','🧃'],['מיץ תפוחים','🧃'],['מיץ ענבים','🧃'],['מיץ אפרסק','🧃'],
+    ['מיץ מנגו','🧃'],['מיץ תות','🧃'],['מיץ אננס','🧃'],['מיץ עגבניות','🧃'],
+    ['מיץ רימון','🧃'],['מיץ לימון','🧃'],['מולטי-ויטמין','🧃'],['מיץ גזר','🧃'],
+  ])
+    for (const br of ['טרופיקנה','ריפרשרס','מטה יהודה','סנפרוסט','פרי הגן'])
+      for (const sz of ['1 ליטר','1.5 ליטר'])
+        p(name,br,'שתייה',sz,img)
+
+  // קפה
+  for (const [name,sz] of [
+    ['קפה נמס','200 גרם'],['קפה נמס','100 גרם'],['קפה טחון','250 גרם'],
+    ['קפה טחון','500 גרם'],['קפסולות קפה','16 יחידות'],['קפה פילטר','250 גרם'],
+  ])
+    for (const br of ['נסקפה','ארומה','ג׳קובס','עלית','דוידוף','לוואצה'])
+      p(name,br,'שתייה',sz,'☕')
+
+  // תה
+  for (const type of ['תה שחור','תה ירוק','תה לבן','תה מנטה','תה קמומיל','תה רויבוס','תה ג׳ינג׳ר-לימון','תה פירות','תה לואיזה','תה זנגביל'])
+    for (const br of ['ויסוצקי','ליפטון','פיק-אפ','אחמד'])
+      for (const sz of ['20 שקיות','40 שקיות'])
+        p(type,br,'שתייה',sz,'🍵')
+
+  // שוקולד
+  for (const [name,img] of [
+    ['שוקולד חלב','🍫'],['שוקולד מריר 70%','🍫'],['שוקולד לבן','🍫'],
+    ['שוקולד עם שקדים','🍫'],['שוקולד עם אגוזים','🍫'],['שוקולד עם קרמל','🍫'],
+    ['שוקולד עם קוקוס','🍫'],['שוקולד עם קריספי','🍫'],['שוקולד מריר 85%','🍫'],
+    ['שוקולד חלב עם דגנים','🍫'],['שוקולד לבן עם פסיפלורה','🍫'],
+  ])
+    for (const br of ['עלית','מילקה','ריטר ספורט','Lindt','רוזה'])
+      for (const sz of ['100 גרם','200 גרם'])
+        p(name,br,'מתוקים',sz,img)
+
+  // חטיפים
+  for (const [name,brands,sizes] of [
+    ['צ׳יפס',['טייסטי','ליז','Doritos'],['80 גרם','150 גרם']],
+    ['פרינגלס',['פרינגלס'],['40 גרם','165 גרם']],
+    ['ביסלי',['אסם'],['70 גרם','120 גרם']],
+    ['בייגלה',['אסם','שטיינגולד'],['150 גרם','300 גרם']],
+    ['קרקרים',['לחמי','Wasa'],['200 גרם','300 גרם']],
+    ['פופקורן',['אסם','Act II'],['80 גרם','150 גרם']],
+    ['במבה',['אסם'],['30 גרם','80 גרם','200 גרם']],
+    ['אפרופו',['אסם'],['70 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'חטיפים',sz,'🍿')
+
+  // עוגיות
+  for (const [name,brands,sizes] of [
+    ['אוראו',['נביסקו'],['154 גרם','308 גרם']],
+    ['ריץ׳',['נביסקו'],['200 גרם']],
+    ['חמאמה',['אסם'],['200 גרם','400 גרם']],
+    ['לוטוס',['Lotus'],['250 גרם']],
+    ['ביסקויט שוקולד',['עלית','אסם'],['200 גרם']],
+    ['גרנולה בר',['Nature Valley','ניצן'],['42 גרם','6 יחידות']],
+    ['עוגיות גרנולה',['ניצן'],['200 גרם']],
+    ['פטיבר',['LU'],['200 גרם']],
+    ['אוראו מילוי כפול',['נביסקו'],['154 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'מתוקים',sz,'🍪')
+
+  // אגוזים
+  for (const [name,brands,sizes] of [
+    ['שקדים קלויים',['תמרוץ','נטפוד'],['100 גרם','200 גרם','400 גרם']],
+    ['אגוזי מלך',['תמרוץ','נטפוד'],['100 גרם','200 גרם']],
+    ['קשיו',['תמרוץ','נטפוד'],['100 גרם','200 גרם']],
+    ['פיסטוק',['תמרוץ','נטפוד'],['100 גרם','200 גרם']],
+    ['פקאן',['תמרוץ','נטפוד'],['100 גרם','200 גרם']],
+    ['גרעיני חמנייה',['נטפוד','ביטנא'],['200 גרם','400 גרם']],
+    ['מיקס אגוזים',['תמרוץ','נטפוד'],['200 גרם','400 גרם']],
+    ['בוטנים קלויים',['ביטנא','נטפוד'],['200 גרם','400 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'חטיפים',sz,'🌰')
+
+  // ממרחים
+  for (const [name,brands,sizes] of [
+    ['ממרח שוקולד ואגוזים',['נוטלה','שטראוס'],['200 גרם','400 גרם','750 גרם']],
+    ['חמאת בוטנים קראנצ׳י',['שטראוס','Skippy'],['340 גרם','500 גרם']],
+    ['חמאת בוטנים חלקה',['שטראוס','Skippy'],['340 גרם','500 גרם']],
+    ['ריבת תות',['שטראוס','פרי מהשדה'],['340 גרם','500 גרם']],
+    ['ריבת תפוחים',['שטראוס','פרי מהשדה'],['340 גרם']],
+    ['ריבת מנגו',['פרי מהשדה'],['340 גרם']],
+    ['דבש טבעי',['יד מרדכי','דבש טבעי'],['250 גרם','500 גרם']],
+    ['טחינה גולמית',['אל ארז','ג׳ריפ','אחלה'],['500 גרם','1 ק״ג']],
+    ['חומוס מוכן',['תבורי'],['200 גרם','400 גרם']],
+    ['מיונז',['הלמן','Heinz'],['430 גרם','800 גרם']],
+    ['קטשופ',['Heinz','אסם'],['340 גרם','500 גרם']],
+    ['חרדל',['Maille','אסם'],['200 גרם']],
+    ['רוטב סויה',['Kikkoman','אחלה'],['150 מ״ל','500 מ״ל']],
+    ['רוטב עגבניות לפסטה',['אסם','Barilla'],['350 גרם','500 גרם']],
+    ['רסק עגבניות',['אסם','Mutti'],['200 גרם','400 גרם']],
+    ['עגבניות מרוסקות',['Mutti','Pelati'],['400 גרם','800 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'ממרחים',sz,'🫙')
+
+  // שימורים
+  for (const [name,brands,sizes] of [
+    ['שימורי תירס',['גרינפילד','Del Monte'],['285 גרם','425 גרם']],
+    ['שימורי חומוס',['גרינפילד','תבורי'],['400 גרם','800 גרם']],
+    ['שימורי שעועית',['גרינפילד','תבורי'],['400 גרם']],
+    ['שימורי אפונה',['גרינפילד','Del Monte'],['400 גרם']],
+    ['עגבניות שלמות שימורים',['Mutti','Pelati'],['400 גרם','800 גרם']],
+    ['שימורי ירקות מעורבים',['גרינפילד'],['400 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'שימורים',sz,'🥫')
+
+  // קפואים
+  for (const [name,brands,sizes] of [
+    ['פיצה מרגריטה',['שטראוס','Dr. Oetker','ממו'],['400 גרם','500 גרם']],
+    ['פיצה ירקות',['שטראוס','Dr. Oetker'],['400 גרם']],
+    ['פיצה פסטו',['Dr. Oetker'],['400 גרם']],
+    ['שניצל עוף קפוא',['תנובה','זוגלובק'],['500 גרם','1 ק״ג']],
+    ['פלאפל קפוא',['תנובה','אסם'],['400 גרם','800 גרם']],
+    ['ירקות קפואים מעורבים',['סנפרוסט','בירדס איי'],['500 גרם','1 ק״ג']],
+    ['ברוקולי קפוא',['סנפרוסט','בירדס איי'],['500 גרם']],
+    ['תירס קפוא',['סנפרוסט','בירדס איי'],['500 גרם']],
+    ['אדממה קפוא',['סנפרוסט'],['400 גרם']],
+    ['גלידת וניל',['ארטיק','שטראוס'],['500 מ״ל','1 ליטר','2 ליטר']],
+    ['גלידת שוקולד',['ארטיק','שטראוס'],['500 מ״ל','1 ליטר']],
+    ['גלידת תות',['ארטיק','שטראוס'],['500 מ״ל','1 ליטר']],
+    ["גלידת Ben & Jerry's",["Ben & Jerry's"],['500 מ״ל']],
+    ['כופתאות בצק',['תנובה'],['500 גרם']],
+    ['בורקס גבינה קפוא',['תנובה','מאפה ירושלמי'],['400 גרם']],
+    ['סמבוסק',['אסם'],['400 גרם']],
+    ['אפונה קפואה',['סנפרוסט'],['500 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'קפואים',sz,'🧊')
+
+  // ניקיון
+  for (const [name,brands,sizes] of [
+    ['אבקת כביסה',['אריאל','פרסיל','אופטימום'],['1 ק״ג','3 ק״ג','5 ק״ג']],
+    ['ג׳ל כביסה נוזלי',['אריאל','פרסיל'],['1 ליטר','2 ליטר']],
+    ['מרכך כביסה',['סנלן','Lenor','Comfort'],['1 ליטר','2 ליטר']],
+    ['נוזל כלים',['פיירי','Sunlight'],['500 מ״ל','1 ליטר']],
+    ['טבליות מדיח',['Fairy','Finish','Somat'],['20 יח׳','40 יח׳']],
+    ['חומר ניקוי רב-שימושי',['מיסטר מאסל','Flash','CIF'],['500 מ״ל','1 ליטר']],
+    ['חומר ניקוי שירותים',['Domestos','הרפיקס'],['500 מ״ל','750 מ״ל']],
+    ['נייר טואלט',['נגה','לוטוס','פלנטי','Kleenex'],['4 גלילות','8 גלילות','12 גלילות','24 גלילות']],
+    ['מגבות נייר',['פלנטי','לוטוס'],['2 גלילות','4 גלילות']],
+    ['שקיות אשפה',['שחם','Tidy'],['20 יח׳','30 יח׳','50 יח׳']],
+    ['נייר כסף',['עמינח','Alcan'],['30 מ׳','50 מ׳']],
+    ['ניילון נצמד',['עמינח'],['30 מ׳','50 מ׳']],
+    ['ספוגים לכלים',['סקוץ׳','Spontex'],['2 יח׳','5 יח׳']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'ניקיון',sz,'🧹')
+
+  // טיפוח
+  for (const [name,brands,sizes] of [
+    ['שמפו לשיער רגיל',['פנטין','הד & שולדרס','Elseve','Dove'],['200 מ״ל','400 מ״ל']],
+    ['שמפו לשיער יבש',['פנטין','Elseve','Dove'],['400 מ״ל']],
+    ['שמפו לשיער שמן',['פנטין','הד & שולדרס'],['400 מ״ל']],
+    ['מרכך שיער',['פנטין','Elseve','Dove'],['200 מ״ל','400 מ״ל']],
+    ['מסכת שיער',['פנטין','Elseve'],['200 מ״ל']],
+    ['ג׳ל מקלחת',['ניוויאה','Dove','Axe'],['250 מ״ל','500 מ״ל']],
+    ['סבון ידיים',['ניוויאה','Dove','Palmolive'],['250 מ״ל','500 מ״ל']],
+    ['דאודורנט',['דאב','Rexona','Axe','Nivea'],['50 מ״ל','150 מ״ל']],
+    ['קרם פנים',['ניוויאה','Dove','Garnier'],['50 מ״ל','100 מ״ל']],
+    ['קרם גוף',['ניוויאה','Dove','Vaseline'],['200 מ״ל','400 מ״ל']],
+    ['משחת שיניים',['קולגייט','Oral-B','Sensodyne'],['75 מ״ל','150 מ״ל']],
+    ['מברשת שיניים',['קולגייט','Oral-B'],['1 יחידה','3 יחידות']],
+    ['ממחטות נייר',['קלינקס','Tempo','לוטוס'],['10 חבילות','20 חבילות']],
+    ['סבון גוף מוצק',['Dove','Lux','Palmolive'],['90 גרם','150 גרם']],
+    ['קרם הגנה מהשמש SPF50',['Nivea Sun','Banana Boat'],['150 מ״ל','200 מ״ל']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'טיפוח',sz,'🧴')
+
+  // דגני בוקר
+  for (const [name,brands,sizes] of [
+    ['קורנפלקס',["תלמה","Kellogg's","Nestlé"],['250 גרם','500 גרם']],
+    ['פצפוצי קוקו',["Kellogg's",'Nestlé'],['250 גרם','375 גרם']],
+    ['גרנולה',['ניצן','Nature Valley','Dr. Oetker'],['500 גרם','750 גרם']],
+    ['שיבולת שועל',['Quaker','ניצן'],['500 גרם','1 ק״ג']],
+    ['מוזלי',['Dr. Oetker','Kölln'],['500 גרם','750 גרם']],
+    ['פצפוצי אורז',["Kellogg's"],['300 גרם']],
+    ['קראנץ׳ שוקולד',['Nestlé'],['375 גרם']],
+    ['פצפוצי שוקולד',['Nestlé',"Kellogg's"],['250 גרם']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'דגני בוקר',sz,'🌾')
+
+  // מוצרי תינוקות
+  for (const [name,brands,sizes] of [
+    ['מחית פירות לתינוק',['Heinz','Happy Baby'],['120 גרם']],
+    ['מחית ירקות לתינוק',['Heinz','Happy Baby'],['120 גרם']],
+    ['דייסה לתינוק',['Nestlé','Heinz'],['200 גרם']],
+    ['חיתולים',['Pampers','Huggies','Libero'],['S','M','L','XL']],
+    ['מגבוני תינוק',['Pampers','Huggies'],['72 יח׳','144 יח׳']],
+    ['שמפו לתינוק',["Johnson's",'Mustela'],['200 מ״ל','400 מ״ל']],
+  ])
+    for (const br of brands)
+      for (const sz of sizes)
+        p(name,br,'תינוקות',sz,'👶')
+
+  return all
+}
+
+// 4 המוצרים הפופולריים (IDs 1,3,10,40 שמורים לדף הבית)
+const _BASE = [
+  { id:  1, barcode:'7290000066622', name:'חלב תנובה 3% שומן',         brand:'תנובה',  category:'מוצרי חלב',  unit:'1 ליטר',  image:'🥛' },
+  { id:  3, barcode:'7290000696874', name:'ביצים L גדולות 12 יחידות',  brand:'אגמון',  category:'ביצים',      unit:'קרטון',   image:'🥚' },
+  { id: 10, barcode:'7290009876543', name:'חזה עוף טרי',               brand:'עוף טוב',category:'בשר ועוף',   unit:'ק״ג',     image:'🍗' },
+  { id: 40, barcode:'0000000000401', name:'תפוחי גרנד סמיט',           brand:'תוצרת הארץ',category:'פירות',   unit:'ק״ג',     image:'🍏' },
 ]
 
-// יצירת מחירים אוטומטית לכל 50 החנויות
-function makePrices(base) {
+export const PRODUCTS = [..._BASE, ..._makeProds()]
+
+// ── מחירים ──
+function _makePrices(base) {
   const v = base * 0.22
-  const mults = [
-     0.30, -0.60,  0.10,  0.50,  0.30, -0.20, -0.40, -0.70,  0.40,  0.20,
-     0.35, -0.50,  0.15, -0.30,  0.45, -0.10,  0.25, -0.65,  0.00, -0.40,
-     0.20, -0.45,  0.35, -0.55,  0.10,  0.55, -0.35,  0.15, -0.20,  0.40,
-    -0.10,  0.60, -0.25,  0.05, -0.50,  0.30, -0.15,  0.45,  0.00, -0.30,
-     0.25, -0.70,  0.20, -0.40,  0.35,  0.10, -0.25,  0.50, -0.10,  0.15,
-  ]
-  return mults.map((m, i) => ({
+  const m = [0.30,-0.60,0.10,0.50,0.30,-0.20,-0.40,-0.70,0.40,0.20,
+             0.35,-0.50,0.15,-0.30,0.45,-0.10,0.25,-0.65,0.00,-0.40,
+             0.20,-0.45,0.35,-0.55,0.10,0.55,-0.35,0.15,-0.20,0.40,
+            -0.10,0.60,-0.25,0.05,-0.50,0.30,-0.15,0.45,0.00,-0.30,
+             0.25,-0.70,0.20,-0.40,0.35,0.10,-0.25,0.50,-0.10,0.15,
+             0.22,-0.48,0.18,-0.32,0.42,-0.08,0.28,-0.58,0.02,-0.38]
+  return m.slice(0, STORES.length).map((mult, i) => ({
     storeId: i + 1,
-    price: Math.max(0.5, Math.round((base + v * m) * 10) / 10),
+    price: Math.max(0.5, Math.round((base + v * mult) * 10) / 10),
   }))
 }
 
-// מחירים לכל מוצר
-export const PRICES = {
-  1:   makePrices(6.9),
-  2:   makePrices(7.5),
-  3:   makePrices(19.9),
-  4:   makePrices(39.9),
-  5:   makePrices(8.9),
-  6:   makePrices(14.9),
-  7:   makePrices(5.9),
-  8:   makePrices(9.9),
-  9:   makePrices(4.5),
-  10:  makePrices(39.9),
-  11:  makePrices(6.5),
-  12:  makePrices(12.9),
-  13:  makePrices(18.9),
-  14:  makePrices(9.9),
-  15:  makePrices(14.9),
-  16:  makePrices(8.9),
-  17:  makePrices(7.5),
-  18:  makePrices(9.9),
-  20:  makePrices(7.9),
-  21:  makePrices(4.9),
-  22:  makePrices(12.9),
-  23:  makePrices(12.9),
-  24:  makePrices(5.9),
-  25:  makePrices(4.9),
-  26:  makePrices(6.9),
-  27:  makePrices(5.9),
-  28:  makePrices(9.9),
-  29:  makePrices(8.9),
-  30:  makePrices(4.9),
-  31:  makePrices(6.9),
-  32:  makePrices(7.9),
-  33:  makePrices(8.9),
-  34:  makePrices(8.9),
-  35:  makePrices(4.9),
-  40:  makePrices(9.9),
-  41:  makePrices(11.9),
-  42:  makePrices(7.9),
-  43:  makePrices(8.9),
-  44:  makePrices(7.9),
-  45:  makePrices(19.9),
-  46:  makePrices(17.9),
-  47:  makePrices(4.9),
-  48:  makePrices(9.9),
-  49:  makePrices(14.9),
-  50:  makePrices(5.9),
-  51:  makePrices(9.9),
-  52:  makePrices(12.9),
-  53:  makePrices(9.9),
-  54:  makePrices(12.9),
-  55:  makePrices(14.9),
-  56:  makePrices(11.9),
-  60:  makePrices(28.9),
-  61:  makePrices(22.9),
-  62:  makePrices(42.9),
-  63:  makePrices(89.9),
-  70:  makePrices(79.9),
-  71:  makePrices(59.9),
-  72:  makePrices(12.9),
-  80:  makePrices(22.9),
-  90:  makePrices(14.9),
-  91:  makePrices(8.9),
-  92:  makePrices(7.9),
-  93:  makePrices(18.9),
-  94:  makePrices(9.9),
-  95:  makePrices(9.9),
-  100: makePrices(4.2),
-  101: makePrices(7.9),
-  102: makePrices(12.9),
-  103: makePrices(29.9),
-  104: makePrices(14.9),
-  110: makePrices(8.9),
-  111: makePrices(4.9),
-  112: makePrices(4.9),
-  113: makePrices(29.9),
-  120: makePrices(49.9),
-  121: makePrices(12.9),
-  122: makePrices(19.9),
-  200: makePrices(9.9),
-  201: makePrices(18.9),
-  202: makePrices(7.9),
-  203: makePrices(6.9),
-  204: makePrices(7.9),
-  205: makePrices(14.9),
-  206: makePrices(5.9),
-  207: makePrices(19.9),
-  208: makePrices(9.9),
-  209: makePrices(12.9),
-  210: makePrices(9.9),
-  211: makePrices(8.9),
-  212: makePrices(12.9),
-  213: makePrices(9.9),
-  214: makePrices(11.9),
-  215: makePrices(5.9),
-  216: makePrices(8.9),
-  217: makePrices(9.9),
-  218: makePrices(11.9),
-  219: makePrices(5.9),
-  220: makePrices(3.9),
-  221: makePrices(3.9),
-  222: makePrices(6.9),
-  223: makePrices(3.9),
-  224: makePrices(9.9),
-  225: makePrices(5.9),
-  226: makePrices(14.9),
-  227: makePrices(9.9),
-  228: makePrices(39.9),
-  229: makePrices(29.9),
-  230: makePrices(12.9),
-  231: makePrices(14.9),
-  232: makePrices(7.9),
-  233: makePrices(29.9),
-  234: makePrices(19.9),
-  235: makePrices(32.9),
-  236: makePrices(19.9),
-  237: makePrices(49.9),
-  238: makePrices(59.9),
-  239: makePrices(69.9),
-  240: makePrices(4.9),
-  241: makePrices(5.9),
-  242: makePrices(6.9),
-  243: makePrices(19.9),
-  244: makePrices(19.9),
-  245: makePrices(12.9),
-  246: makePrices(14.9),
-  247: makePrices(12.9),
-  248: makePrices(19.9),
-  249: makePrices(12.9),
-  250: makePrices(9.9),
-  254: makePrices(7.9),
-  255: makePrices(7.9),
-  256: makePrices(4.2),
-  257: makePrices(9.9),
-  258: makePrices(8.9),
-  259: makePrices(12.9),
-  260: makePrices(11.9),
-  261: makePrices(39.9),
-  262: makePrices(14.9),
-  264: makePrices(14.9),
-  265: makePrices(5.9),
-  266: makePrices(9.9),
-  267: makePrices(9.9),
-  268: makePrices(8.9),
-  269: makePrices(19.9),
-  270: makePrices(12.9),
-  271: makePrices(14.9),
-  272: makePrices(19.9),
-  273: makePrices(5.9),
-  274: makePrices(29.9),
-  275: makePrices(24.9),
-  276: makePrices(9.9),
-  277: makePrices(29.9),
-  278: makePrices(19.9),
-  279: makePrices(39.9),
-  281: makePrices(29.9),
-  282: makePrices(19.9),
-  283: makePrices(14.9),
-  284: makePrices(12.9),
-  285: makePrices(9.9),
-  286: makePrices(14.9),
-  288: makePrices(24.9),
-  289: makePrices(24.9),
-  290: makePrices(19.9),
-  291: makePrices(14.9),
-  292: makePrices(9.9),
-  293: makePrices(29.9),
-  294: makePrices(12.9),
+function _getBase({ id, category, name, unit }) {
+  const t = ((id * 7919) % 97) / 96
+  const ranges = {
+    'מוצרי חלב': unit.includes('ליטר') ? [5.5,9.9] : unit.includes('500') ? [7,15] : [8,22],
+    'גבינות':    unit.includes('100')  ? [12,22] : [9,45],
+    'לחם ומאפים':[5.9,14.9],
+    'ירקות':     unit==='ק״ג' ? [3.9,16] : [4.9,18],
+    'פירות':     unit==='ק״ג' ? [5.9,25] : unit==='250 גרם' ? [8,18] : [4.9,15],
+    'בשר ועוף':  name.includes('בקר')||name.includes('אנטריקוט') ? [50,120] : [18,50],
+    'דגים':      name.includes('שימורים') ? [8,18] : [40,100],
+    'ביצים':     unit.includes('30') ? [39,55] : unit.includes('12') ? [17,25] : [9,14],
+    'שמנים':     [12,55],
+    'מרכיבים':   [5,20],
+    'פסטה ואורז':[7,22],
+    'קטניות':    [8,18],
+    'תבלינים':   [8,18],
+    'שתייה':     name.includes('מים') ? [3,6] : name.includes('קפה') ? [20,55] : name.includes('תה') ? [10,20] : name.includes('ריד') || name.includes('רד') ? [7,10] : [5,14],
+    'מתוקים':    unit.includes('100') ? [6,16] : [9,30],
+    'חטיפים':    [4,18],
+    'ממרחים':    [10,55],
+    'שימורים':   [4,12],
+    'קפואים':    name.includes('גלידה') ? [18,45] : [15,40],
+    'ניקיון':    [8,65],
+    'טיפוח':     [12,60],
+    'דגני בוקר': [12,30],
+    'תינוקות':   [20,80],
+  }
+  const [mn, mx] = ranges[category] || [5, 30]
+  return Math.round((mn + (mx - mn) * t) * 10) / 10
 }
 
-// היסטוריית מחירים לגרף
+export const PRICES = Object.fromEntries(
+  PRODUCTS.map(p => [p.id, _makePrices(_getBase(p))])
+)
+
 export const PRICE_HISTORY = {
   1: [
-    { month: 'דצמבר', shufersal: 6.50, ramilevi: 5.50, mega: 6.10 },
-    { month: 'ינואר',  shufersal: 6.50, ramilevi: 5.70, mega: 6.20 },
-    { month: 'פברואר', shufersal: 6.90, ramilevi: 5.80, mega: 6.30 },
-    { month: 'מרץ',    shufersal: 6.90, ramilevi: 5.80, mega: 6.40 },
-    { month: 'אפריל',  shufersal: 6.90, ramilevi: 5.90, mega: 6.50 },
-    { month: 'מאי',    shufersal: 6.90, ramilevi: 5.90, mega: 6.50 },
+    { month:'דצמבר', shufersal:6.50, ramilevi:5.50, mega:6.10 },
+    { month:'ינואר',  shufersal:6.50, ramilevi:5.70, mega:6.20 },
+    { month:'פברואר', shufersal:6.90, ramilevi:5.80, mega:6.30 },
+    { month:'מרץ',    shufersal:6.90, ramilevi:5.80, mega:6.40 },
+    { month:'אפריל',  shufersal:6.90, ramilevi:5.90, mega:6.50 },
+    { month:'מאי',    shufersal:6.90, ramilevi:5.90, mega:6.50 },
   ],
   3: [
-    { month: 'דצמבר', shufersal: 17.90, ramilevi: 15.90, mega: 17.00 },
-    { month: 'ינואר',  shufersal: 18.50, ramilevi: 16.50, mega: 17.50 },
-    { month: 'פברואר', shufersal: 19.90, ramilevi: 16.90, mega: 18.50 },
-    { month: 'מרץ',    shufersal: 19.90, ramilevi: 16.90, mega: 18.50 },
-    { month: 'אפריל',  shufersal: 19.90, ramilevi: 16.90, mega: 18.50 },
-    { month: 'מאי',    shufersal: 19.90, ramilevi: 16.90, mega: 18.50 },
-  ],
-  10: [
-    { month: 'דצמבר', shufersal: 35.90, ramilevi: 31.90, mega: 34.00 },
-    { month: 'ינואר',  shufersal: 37.90, ramilevi: 33.90, mega: 35.90 },
-    { month: 'פברואר', shufersal: 39.90, ramilevi: 34.90, mega: 37.90 },
-    { month: 'מרץ',    shufersal: 39.90, ramilevi: 34.90, mega: 37.90 },
-    { month: 'אפריל',  shufersal: 41.90, ramilevi: 34.90, mega: 38.90 },
-    { month: 'מאי',    shufersal: 41.90, ramilevi: 34.90, mega: 38.90 },
+    { month:'דצמבר', shufersal:17.9, ramilevi:15.9, mega:17.0 },
+    { month:'ינואר',  shufersal:18.5, ramilevi:16.5, mega:17.5 },
+    { month:'פברואר', shufersal:19.9, ramilevi:16.9, mega:18.5 },
+    { month:'מרץ',    shufersal:19.9, ramilevi:16.9, mega:18.5 },
+    { month:'אפריל',  shufersal:19.9, ramilevi:16.9, mega:18.5 },
+    { month:'מאי',    shufersal:19.9, ramilevi:16.9, mega:18.5 },
   ],
 }
 
-// חישוב מרחק GPS
 export function calcDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371
-  const dLat = ((lat2 - lat1) * Math.PI) / 180
-  const dLng = ((lng2 - lng1) * Math.PI) / 180
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2)
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  const R = 6371, d2r = Math.PI / 180
+  const dLat = (lat2 - lat1) * d2r, dLng = (lng2 - lng1) * d2r
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*d2r)*Math.cos(lat2*d2r)*Math.sin(dLng/2)**2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
 }
 
-// חיפוש מוצרים
 export function searchProducts(query) {
   const q = query.trim().toLowerCase()
   if (!q) return []
-  return PRODUCTS.filter(
-    (p) =>
-      p.name.toLowerCase().includes(q) ||
-      p.barcode.includes(q) ||
-      p.category.toLowerCase().includes(q) ||
-      (p.brand && p.brand.toLowerCase().includes(q))
+  return PRODUCTS.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    p.barcode.includes(q) ||
+    p.category.toLowerCase().includes(q) ||
+    (p.brand && p.brand.toLowerCase().includes(q))
   )
 }
 
-// מחירים לפי רדיוס
 export function getPricesNearby(productId, userLat, userLng, radiusKm) {
-  const prices = PRICES[productId] || []
-  return prices
-    .map((p) => {
-      const store = STORES.find((s) => s.id === p.storeId)
+  return (PRICES[productId] || [])
+    .map(p => {
+      const store = STORES.find(s => s.id === p.storeId)
       if (!store) return null
       const distance = calcDistance(userLat, userLng, store.lat, store.lng)
       if (distance > radiusKm) return null
-      return { ...p, store, chain: CHAINS[store.chain], distance: Math.round(distance * 10) / 10 }
+      return { ...p, store, chain: CHAINS[store.chain], distance: Math.round(distance*10)/10 }
     })
     .filter(Boolean)
-    .sort((a, b) => a.price - b.price)
+    .sort((a,b) => a.price - b.price)
 }
