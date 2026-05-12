@@ -73,13 +73,26 @@ export const STORES = [
   { id: 58, chain:'victory',   branch:'ויקטורי אילת',                   address:'התמר 5, אילת',               lat:29.5577,lng:34.9519},
 ]
 
+// ── רשתות זמינות לפי מוצר (דטרמיניסטי לפי id) ──
+const _CK = ['shufersal','ramilevi','mega','victory','yeinot','yohananof','osher','yesh']
+function _assignChains(id) {
+  const count = 3 + (id % 4)   // 3–6 רשתות
+  return _CK
+    .map((c, i) => [c, (id * 31 + i * 11) % 100])
+    .sort((a, b) => a[1] - b[1])
+    .map(x => x[0])
+    .slice(0, count)
+}
+
 // ── מחולל מוצרים ──
 function _makeProds() {
   const all = []
   let id = 1000
   const bc = () => `7290${String(id * 13 + 1000000).slice(0,9)}`
-  const p = (name, brand, category, unit, image) =>
-    all.push({ id: id++, barcode: bc(), name, brand, category, unit, image })
+  const p = (name, brand, category, unit, image) => {
+    const curId = id
+    all.push({ id: id++, barcode: bc(), name, brand, category, unit, image, chains: _assignChains(curId) })
+  }
 
   // חלב
   for (const fat of ['1%','1.5%','3%','5%'])
@@ -524,26 +537,28 @@ function _makeProds() {
 
 // 4 המוצרים הפופולריים (IDs 1,3,10,40 שמורים לדף הבית)
 const _BASE = [
-  { id:  1, barcode:'7290000066622', name:'חלב תנובה 3% שומן',         brand:'תנובה',  category:'מוצרי חלב',  unit:'1 ליטר',  image:'🥛' },
-  { id:  3, barcode:'7290000696874', name:'ביצים L גדולות 12 יחידות',  brand:'אגמון',  category:'ביצים',      unit:'קרטון',   image:'🥚' },
-  { id: 10, barcode:'7290009876543', name:'חזה עוף טרי',               brand:'עוף טוב',category:'בשר ועוף',   unit:'ק״ג',     image:'🍗' },
-  { id: 40, barcode:'0000000000401', name:'תפוחי גרנד סמיט',           brand:'תוצרת הארץ',category:'פירות',   unit:'ק״ג',     image:'🍏' },
+  { id:  1, barcode:'7290000066622', name:'חלב תנובה 3% שומן',         brand:'תנובה',       category:'מוצרי חלב', unit:'1 ליטר', image:'🥛', chains:_CK },
+  { id:  3, barcode:'7290000696874', name:'ביצים L גדולות 12 יחידות',  brand:'אגמון',       category:'ביצים',     unit:'קרטון',  image:'🥚', chains:_CK },
+  { id: 10, barcode:'7290009876543', name:'חזה עוף טרי',               brand:'עוף טוב',     category:'בשר ועוף',  unit:'ק״ג',    image:'🍗', chains:['shufersal','ramilevi','mega','victory','yohananof','osher'] },
+  { id: 40, barcode:'0000000000401', name:'תפוחי גרנד סמיט',           brand:'תוצרת הארץ',  category:'פירות',     unit:'ק״ג',    image:'🍏', chains:_CK },
 ]
 
 export const PRODUCTS = [..._BASE, ..._makeProds()]
 
-// ── מחירים ──
-function _makePrices(base) {
+// ── מחירים (רק בחנויות של הרשתות שמוכרות את המוצר) ──
+const _M = [0.30,-0.60,0.10,0.50,0.30,-0.20,-0.40,-0.70,0.40,0.20,
+            0.35,-0.50,0.15,-0.30,0.45,-0.10,0.25,-0.65,0.00,-0.40,
+            0.20,-0.45,0.35,-0.55,0.10,0.55,-0.35,0.15,-0.20,0.40,
+           -0.10,0.60,-0.25,0.05,-0.50,0.30,-0.15,0.45,0.00,-0.30,
+            0.25,-0.70,0.20,-0.40,0.35,0.10,-0.25,0.50,-0.10,0.15,
+            0.22,-0.48,0.18,-0.32,0.42,-0.08,0.28,-0.58,0.02,-0.38]
+
+function _makePrices(base, chains) {
   const v = base * 0.22
-  const m = [0.30,-0.60,0.10,0.50,0.30,-0.20,-0.40,-0.70,0.40,0.20,
-             0.35,-0.50,0.15,-0.30,0.45,-0.10,0.25,-0.65,0.00,-0.40,
-             0.20,-0.45,0.35,-0.55,0.10,0.55,-0.35,0.15,-0.20,0.40,
-            -0.10,0.60,-0.25,0.05,-0.50,0.30,-0.15,0.45,0.00,-0.30,
-             0.25,-0.70,0.20,-0.40,0.35,0.10,-0.25,0.50,-0.10,0.15,
-             0.22,-0.48,0.18,-0.32,0.42,-0.08,0.28,-0.58,0.02,-0.38]
-  return m.slice(0, STORES.length).map((mult, i) => ({
-    storeId: i + 1,
-    price: Math.max(0.5, Math.round((base + v * mult) * 10) / 10),
+  const stores = chains ? STORES.filter(s => chains.includes(s.chain)) : STORES
+  return stores.map((store, i) => ({
+    storeId: store.id,
+    price: Math.max(0.5, Math.round((base + v * _M[i % _M.length]) * 10) / 10),
   }))
 }
 
@@ -579,7 +594,7 @@ function _getBase({ id, category, name, unit }) {
 }
 
 export const PRICES = Object.fromEntries(
-  PRODUCTS.map(p => [p.id, _makePrices(_getBase(p))])
+  PRODUCTS.map(p => [p.id, _makePrices(_getBase(p), p.chains)])
 )
 
 export const PRICE_HISTORY = {

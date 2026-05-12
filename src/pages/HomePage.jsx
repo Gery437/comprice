@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { searchFoodProducts, getProductByBarcode } from '../lib/foodApi'
-import { PRODUCTS, searchProducts } from '../lib/mockData'
+import { PRODUCTS, CHAINS, searchProducts } from '../lib/mockData'
 import BarcodeScanner from '../components/BarcodeScanner'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
@@ -189,7 +189,20 @@ export default function HomePage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-400 text-xs">{product.category} · {product.unit}</p>
+                  <p className="text-gray-400 text-xs mb-1">{product.category} · {product.unit}</p>
+                  {product.chains && product.chains.length > 0 ? (
+                    <div className="flex gap-1 flex-wrap">
+                      {product.chains.map(ck => CHAINS[ck] ? (
+                        <span key={ck}
+                          className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none"
+                          style={{ backgroundColor: CHAINS[ck].color + '18', color: CHAINS[ck].color, border: `1px solid ${CHAINS[ck].color}40` }}>
+                          {CHAINS[ck].logo} {CHAINS[ck].name}
+                        </span>
+                      ) : null)}
+                    </div>
+                  ) : product.source === 'openfoodfacts' ? (
+                    <span className="text-[10px] text-gray-400">זמינות לפי סניף</span>
+                  ) : null}
                 </div>
                 <span className="text-emerald-500 text-xs shrink-0">השווה ←</span>
               </button>
