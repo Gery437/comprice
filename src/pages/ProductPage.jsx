@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { PRODUCTS, CHAINS, STORES, PRICES, PRICE_HISTORY, calcDistance } from '../lib/mockData'
-import { getProductByBarcode } from '../lib/foodApi'
+import { getProductByBarcode, getRealPrices } from '../lib/foodApi'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts'
@@ -60,6 +60,7 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState(null)
   const [prices, setPrices] = useState([])
+  const [realPrices, setRealPrices] = useState(null) // { shufersal: 8.90, ... }
   const [locationError, setLocationError] = useState(null)
   const [addedToList, setAddedToList] = useState(false)
 
@@ -91,7 +92,14 @@ export default function ProductPage() {
 
       setProduct(foundProduct)
 
-      // קבל מחירים
+      // נסה לקבל מחירים אמיתיים מה-API לפי ברקוד
+      const barcode = foundProduct.barcode || (String(foundProduct.id).startsWith('off_')
+        ? foundProduct.id.replace('off_', '') : null)
+      if (barcode) {
+        getRealPrices(barcode).then(rp => { if (rp) setRealPrices(rp) })
+      }
+
+      // קבל מחירים (mock — fallback)
       const isNumericId = typeof foundProduct.id === 'number'
       const rawPrices = isNumericId
         ? PRICES[foundProduct.id] || []
@@ -186,15 +194,66 @@ export default function ProductPage() {
           </div>
         )}
 
-        {!isNumericId && (
+        {!isNumericId && !realPrices && (
           <div className="mt-3 bg-blue-50 border border-blue-200 text-blue-700 text-sm px-4 py-2 rounded-xl">
             💡 המחירים לדוגמה — חיבור למחירים אמיתיים בקרוב
           </div>
         )}
       </Card>
 
-      {/* חיסכון */}
-      {savings > 0.1 && (
+      {/* מחירים אמיתיים מהרשתות */}
+      {realPrices && Object.keys(realPrices).length > 0 && (() => {
+        const entries = Object.entries(realPrices).sort((a, b) => a[1] - b[1])
+        const cheapestChain = entries[0]
+        const mostExpensiveChain = entries[entries.length - 1]
+        const realSavings = entries.length > 1 ? mostExpensiveChain[1] - cheapestChain[1] : 0
+        return (
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg font-bold text-gray-700">💰 מחירים אמיתיים ממשקלי מחירים</span>
+              <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">עדכני</span>
+            </div>
+            {realSavings > 0.1 && (
+              <div className="bg-emerald-600 text-white rounded-2xl p-4 mb-4 text-center shadow-lg">
+                <p className="text-emerald-200 text-sm mb-1">חיסכון אפשרי</p>
+                <p className="text-3xl font-bold">₪{realSavings.toFixed(2)}</p>
+              </div>
+            )}
+            <div className="space-y-3">
+              {entries.map(([chainKey, price], index) => {
+                const chain = CHAINS[chainKey]
+                if (!chain) return null
+                const isCheapest = index === 0
+                return (
+                  <div key={chainKey} className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm ${
+                    isCheapest ? 'cheapest' : 'bg-white border border-gray-100'
+                  }`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
+                      isCheapest ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500'
+                    }`}>{index + 1}</div>
+                    <div className="text-2xl shrink-0">{chain.logo}</div>
+                    <div className="flex-1">
+                      <p className="font-bold text-gray-800">{chain.name}</p>
+                      <p className="text-gray-400 text-xs">מחיר ממוצע בסניפים</p>
+                    </div>
+                    <div className="text-left shrink-0">
+                      <p className={`text-2xl font-bold ${isCheapest ? 'text-emerald-700' : 'text-gray-800'}`}>
+                        ₪{price.toFixed(2)}
+                      </p>
+                      {isCheapest && (
+                        <span className="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">הכי זול! 🏆</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* חיסכון לפי מיקום (mock data) — מוצג רק כשאין מחירים אמיתיים */}
+      {!realPrices && savings > 0.1 && (
         <div className="bg-emerald-600 text-white rounded-2xl p-5 mb-6 text-center shadow-lg">
           <p className="text-emerald-200 text-sm mb-1">חיסכון אפשרי בין הכי זול להכי יקר</p>
           <p className="text-4xl font-bold">₪{savings.toFixed(2)}</p>
@@ -202,9 +261,10 @@ export default function ProductPage() {
         </div>
       )}
 
-      {/* רשימת חנויות */}
+      {/* רשימת חנויות לפי מיקום */}
       <h2 className="text-lg font-bold text-gray-700 mb-4">
-        📍 {prices.length} חנויות {prices.some(p => p.distance > radius) ? '(הקרובות ביותר)' : `ברדיוס ${radius} ק"מ`}
+        📍 {prices.length} חנויות קרובות {prices.some(p => p.distance > radius) ? '(הקרובות ביותר)' : `ברדיוס ${radius} ק"מ`}
+        {realPrices && <span className="text-xs font-normal text-gray-400 mr-2">(מחירי הדמו)</span>}
       </h2>
 
       {prices.length === 0 ? (

@@ -2,6 +2,26 @@
 const OFF_BASE = 'https://world.openfoodfacts.org'
 const OFF_IL = 'https://il.openfoodfacts.org'
 
+// ComPrice real-price API
+const COMPRICE_API = 'https://comprice-api-production.up.railway.app'
+
+/**
+ * Get real supermarket prices for a barcode.
+ * Returns: { shufersal: 8.90, ramilevi: 7.50, ... } or null if not found.
+ */
+export async function getRealPrices(barcode) {
+  if (!barcode) return null
+  try {
+    const res = await fetch(`${COMPRICE_API}/api/prices/${barcode}`)
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data.found || !data.prices || Object.keys(data.prices).length === 0) return null
+    return data.prices
+  } catch {
+    return null
+  }
+}
+
 // חיפוש מוצרים לפי שם (עברית + אנגלית)
 export async function searchFoodProducts(query) {
   try {
