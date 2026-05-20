@@ -45,3 +45,12 @@
     border: 2px solid #10b981;
   }
 }
+
+@keyframes scan-line {
+  0%   { top: 8px; }
+  50%  { top: calc(100% - 8px); }
+  100% { top: 8px; }
+}
+.animate-scan-line {
+  animation: scan-line 2s ease-in-out infinite;
+}

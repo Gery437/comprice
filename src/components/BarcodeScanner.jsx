@@ -1,78 +1,107 @@
 import { useEffect, useRef, useState } from 'react'
-import Button from './ui/Button'
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode'
 
 export default function BarcodeScanner({ onDetected, onClose }) {
   const scannerRef = useRef(null)
-  const [error, setError] = useState(null)
-  const [scanning, setScanning] = useState(false)
-  const html5QrRef = useRef(null)
+  const [err, setErr] = useState('')
+  const [ready, setReady] = useState(false)
+
+  async function stopScanner() {
+    if (scannerRef.current) {
+      try { await scannerRef.current.stop() } catch {}
+      try { scannerRef.current.clear() } catch {}
+      scannerRef.current = null
+    }
+  }
 
   useEffect(() => {
-    let html5Qr = null
+    document.body.style.overflow = 'hidden'
 
-    const startScanner = async () => {
+    async function start() {
       try {
-        const { Html5Qrcode } = await import('html5-qrcode')
-        html5Qr = new Html5Qrcode('barcode-reader')
-        html5QrRef.current = html5Qr
-        setScanning(true)
+        const scanner = new Html5Qrcode('barcode-reader-div', {
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.QR_CODE,
+          ],
+          verbose: false,
+        })
+        scannerRef.current = scanner
 
-        await html5Qr.start(
+        await scanner.start(
           { facingMode: 'environment' },
-          { fps: 10, qrbox: { width: 250, height: 150 } },
-          (decodedText) => {
-            onDetected(decodedText)
-            html5Qr.stop().catch(() => {})
+          { fps: 15, qrbox: { width: 280, height: 120 } },
+          async (code) => {
+            await stopScanner()
+            onDetected(code)
+            onClose()
           },
           () => {}
         )
-      } catch (err) {
-        setError('לא ניתן לגשת למצלמה. ודא שנתת הרשאה.')
-        setScanning(false)
+        setReady(true)
+      } catch {
+        setErr('לא ניתן לפתוח מצלמה — בדוק הרשאות ונסה שוב')
       }
     }
 
-    startScanner()
-
+    const t = setTimeout(start, 200)
     return () => {
-      if (html5QrRef.current) {
-        html5QrRef.current.stop().catch(() => {})
-      }
+      document.body.style.overflow = ''
+      clearTimeout(t)
+      stopScanner()
     }
-  }, [onDetected])
+  }, [])
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" dir="rtl">
-      <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-800">סריקת ברקוד</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    <div className="fixed inset-0 z-50 bg-black flex flex-col" dir="rtl">
+      {/* Header */}
+      <div className="relative z-20 flex items-center justify-between px-5 pt-10 pb-3 bg-gradient-to-b from-black/80 to-transparent">
+        <div>
+          <h3 className="text-lg font-bold text-white">📷 סרוק ברקוד</h3>
+          <p className="text-slate-300 text-xs mt-0.5">כוון לברקוד על האריזה</p>
         </div>
+        <button
+          onClick={async () => { await stopScanner(); onClose() }}
+          className="text-white text-xl w-10 h-10 flex items-center justify-center rounded-xl bg-black/50"
+        >✕</button>
+      </div>
 
-        {error ? (
-          <div className="text-center py-8">
-            <div className="text-4xl mb-3">📷</div>
-            <p className="text-red-500 font-medium">{error}</p>
-            <p className="text-gray-400 text-sm mt-2">נסה להכניס ברקוד ידנית בחיפוש</p>
-          </div>
-        ) : (
-          <>
-            <div className="rounded-2xl overflow-hidden bg-gray-900 mb-4">
-              <div id="barcode-reader" ref={scannerRef} className="w-full" />
+      {/* Scanner container */}
+      <div className="relative flex-1 overflow-hidden">
+        <div id="barcode-reader-div" className="w-full h-full" />
+
+        {/* Animated scan line overlay */}
+        {ready && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="relative w-72 h-32">
+              <div
+                className="absolute left-1 right-1 h-0.5 bg-red-500 animate-scan-line"
+                style={{ boxShadow: '0 0 8px 2px rgba(239,68,68,0.8)' }}
+              />
             </div>
-            {scanning && (
-              <p className="text-center text-emerald-600 text-sm font-medium animate-pulse">
-                📷 מחפש ברקוד... כוון את המצלמה
-              </p>
-            )}
-          </>
+          </div>
         )}
 
-        <div className="mt-4">
-          <Button variant="secondary" onClick={onClose} className="w-full">
-            ביטול
-          </Button>
-        </div>
+        {err && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+            <p className="text-red-400 text-sm text-center bg-red-500/20 border border-red-500/30 rounded-xl px-5 py-4 mx-6">
+              {err}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="relative z-20 px-5 py-6 bg-gradient-to-t from-black/80 to-transparent">
+        <button
+          onClick={async () => { await stopScanner(); onClose() }}
+          className="w-full py-3 rounded-xl bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors"
+        >ביטול</button>
       </div>
     </div>
   )
