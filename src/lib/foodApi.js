@@ -22,6 +22,21 @@ export async function getProductDetails(barcode) {
 }
 
 /**
+ * Fetch all real store locations from ComPrice backend.
+ * Returns: [{ id, chainKey, name, address, city, lat, lng }, ...] or []
+ */
+export async function getRealStores() {
+  try {
+    const res = await fetch(`${COMPRICE_API}/api/stores`)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.stores || []
+  } catch {
+    return []
+  }
+}
+
+/**
  * Get real supermarket prices for a barcode.
  * Returns: { shufersal: 8.90, ramilevi: 7.50, ... } or null if not found.
  */
