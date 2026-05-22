@@ -183,40 +183,50 @@ export default function HomePage() {
     setBarcodeLoading(true)
     setShowDropdown(false)
 
-    // הרחב ברקוד קצר לברקוד מלא אם צריך
     const candidates = expandBarcode(rawBarcode)
     const barcode = candidates[0] || rawBarcode
     setQuery(barcode)
 
-    const product = await getProductByBarcode(barcode)
-    if (product) {
-      navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
+    // חפש ב-OFF וב-ComPrice במקביל
+    const [offProduct, apiDetails] = await Promise.all([
+      getProductByBarcode(barcode),
+      getProductDetails(barcode),
+    ])
+
+    let product
+    if (offProduct) {
+      product = offProduct
+    } else if (apiDetails?.name) {
+      product = {
+        id: `barcode_${barcode}`,
+        barcode,
+        name: apiDetails.name,
+        category: '',
+        unit: '',
+        image: '🛒',
+        source: 'direct',
+      }
     } else {
-      // לא נמצא ב-OFF — בדוק במאגר המקומי
       const localMatch = PRODUCTS.find(p => p.barcode === barcode)
-      const fallback = localMatch || {
+      product = localMatch || {
         id: `barcode_${barcode}`,
         barcode,
         name: `מוצר ${barcode}`,
         category: '',
         unit: 'יחידה',
         image: '🛒',
+        source: 'direct',
       }
-      navigate(`/product/${fallback.id ?? `barcode_${barcode}`}?radius=${radius}`, {
-        state: { product: fallback }
-      })
     }
+
+    navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
     setBarcodeLoading(false)
   }
 
   function goToProduct(product) {
     setShowDropdown(false)
     setQuery('')
-    // מוצר שנמצא דרך חיפוש ברקוד ישיר
-    if (product._directBarcode) {
-      handleBarcodeDetected(product.barcode)
-      return
-    }
+    // תמיד נווט ישירות עם ה-state — אין צורך בחיפוש מחדש
     navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
   }
 
