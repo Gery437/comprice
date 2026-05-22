@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
-import { PRODUCTS, CHAINS, STORES, PRICES, PRICE_HISTORY, calcDistance } from '../lib/mockData'
+import { PRODUCTS, CHAINS, PRICE_HISTORY } from '../lib/mockData'
 import { getHomeLocation } from '../lib/locationStorage'
 import { getProductByBarcode, getRealPrices, getRealStores } from '../lib/foodApi'
 import {
@@ -32,27 +32,6 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
-// מחירי דמו למוצרים מספריים (לא ברקוד)
-function getPricesNearbyDynamic(productId, prices, userLat, userLng, radiusKm) {
-  const withDistance = prices
-    .map((p) => {
-      const store = STORES.find((s) => s.id === p.storeId)
-      if (!store) return null
-      const distance = calcDistance(userLat, userLng, store.lat, store.lng)
-      return {
-        ...p,
-        store,
-        chain: CHAINS[store.chain],
-        distance: Math.round(distance * 10) / 10,
-      }
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.distance - b.distance)
-
-  const inRadius = withDistance.filter((p) => p.distance <= radiusKm)
-  const result = inRadius.length > 0 ? inRadius : withDistance.slice(0, 5)
-  return result.sort((a, b) => a.price - b.price)
-}
 
 export default function ProductPage() {
   const { id } = useParams()
@@ -63,7 +42,6 @@ export default function ProductPage() {
 
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState(null)
-  const [mockPrices, setMockPrices] = useState([])       // mock — למוצרי דמו בלבד
   const [realPrices, setRealPrices] = useState(null)     // { chainKey: price }
   const [realStores, setRealStores] = useState([])       // חנויות אמיתיות
   const [userLocation, setUserLocation] = useState(null)
@@ -138,14 +116,6 @@ export default function ProductPage() {
         })
       }
 
-      // מוצרי דמו — טען מחירי mock
-      const isNumericId = typeof foundProduct.id === 'number'
-      if (isNumericId) {
-        const rawPrices = PRICES[foundProduct.id] || []
-        // מיקום יוגדר בהמשך — נחכה לו
-        setMockPrices(rawPrices)
-      }
-
       // בקשת מיקום
       const tryGetLocation = () =>
         new Promise((resolve) => {
@@ -175,11 +145,6 @@ export default function ProductPage() {
     loadProduct()
   }, [id, radius, navigate, location.state])
 
-  // מחירי דמו לפי מיקום (רק למוצרי demo)
-  const nearbyMockPrices = useMemo(() => {
-    if (!userLocation || !mockPrices.length) return []
-    return getPricesNearbyDynamic(product?.id, mockPrices, userLocation.lat, userLocation.lng, radius)
-  }, [userLocation, mockPrices, product?.id, radius])
 
   function addToShoppingList() {
     const existing = JSON.parse(localStorage.getItem('shoppingList') || '[]')
@@ -204,25 +169,13 @@ export default function ProductPage() {
   if (!product) return null
 
   const isNumericId = typeof product.id === 'number'
-  const history = isNumericId ? PRICE_HISTORY[product.id] : null
+  const history = isNumericId ? (PRICE_HISTORY[product.id] || null) : null
 
-  // קבע איזו תצוגה להציג
-  const showRealView = nearbyRealStores.length > 0
-  const showRealChainOnly = realPrices && Object.keys(realPrices).length > 0 && !showRealView
-  const showMockView = !showRealView && isNumericId
-
-  // נתוני חיסכון
+  // נתוני חיסכון — רק כשיש חנויות אמיתיות עם מחיר
   const savings = (() => {
-    if (showRealView) {
+    if (nearbyRealStores.length > 1) {
       const prices = nearbyRealStores.map(s => s.price)
-      return prices.length > 1 ? Math.max(...prices) - Math.min(...prices) : 0
-    }
-    if (showRealChainOnly) {
-      const entries = Object.values(realPrices)
-      return entries.length > 1 ? Math.max(...entries) - Math.min(...entries) : 0
-    }
-    if (showMockView && nearbyMockPrices.length > 1) {
-      return nearbyMockPrices[nearbyMockPrices.length - 1].price - nearbyMockPrices[0].price
+      return Math.max(...prices) - Math.min(...prices)
     }
     return 0
   })()
@@ -327,99 +280,7 @@ export default function ProductPage() {
         </div>
       )}
 
-      {/* ── תצוגת רשתות בלבד (אין חנויות בטווח, אבל יש מחירים) ── */}
-      {showRealChainOnly && (() => {
-        const entries = Object.entries(realPrices).sort((a, b) => a[1] - b[1])
-        return (
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <h2 className="text-lg font-bold text-gray-700">💰 מחירים לפי רשת</h2>
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">אמיתי</span>
-            </div>
-            {nearbyRealStores.length === 0 && realStores.length > 0 && (
-              <div className="mb-3 bg-amber-50 border border-amber-200 text-amber-700 text-sm px-4 py-2 rounded-xl">
-                ⚠️ אין חנויות עם מחיר ידוע בטווח {radius} ק"מ — הצג מחירים לפי רשת ללא מיקום ספציפי
-              </div>
-            )}
-            <div className="space-y-3">
-              {entries.map(([chainKey, price], index) => {
-                const chain = CHAINS[chainKey]
-                if (!chain) return null
-                const isCheapest = index === 0
-                return (
-                  <div key={chainKey} className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm ${
-                    isCheapest ? 'cheapest' : 'bg-white border border-gray-100'
-                  }`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                      isCheapest ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500'
-                    }`}>{index + 1}</div>
-                    <div className="text-2xl shrink-0">{chain.logo}</div>
-                    <div className="flex-1">
-                      <p className="font-bold text-gray-800">{chain.name}</p>
-                      <p className="text-gray-400 text-xs">מחיר ממוצע ברשת</p>
-                    </div>
-                    <div className="text-left shrink-0">
-                      <p className={`text-2xl font-bold ${isCheapest ? 'text-emerald-700' : 'text-gray-800'}`}>
-                        ₪{price.toFixed(2)}
-                      </p>
-                      {isCheapest && (
-                        <span className="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">הכי זול! 🏆</span>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )
-      })()}
 
-      {/* ── תצוגת דמו (מוצרי demo מספריים בלבד) ── */}
-      {showMockView && (
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-gray-700 mb-3">
-            📍 {nearbyMockPrices.length} חנויות קרובות{' '}
-            {nearbyMockPrices.some(p => p.distance > radius) ? '(הקרובות ביותר)' : `ברדיוס ${radius} ק"מ`}
-            <span className="text-xs font-normal text-gray-400 mr-2">(מחירי הדגמה)</span>
-          </h2>
-          {nearbyMockPrices.length === 0 ? (
-            <Card className="p-8 text-center">
-              <div className="text-4xl mb-3">📍</div>
-              <p className="text-gray-500 font-medium">לא נמצאו חנויות ברדיוס {radius} ק"מ</p>
-              <p className="text-gray-400 text-sm mt-2">נסה להגדיל את הרדיוס</p>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {nearbyMockPrices.map((item, index) => {
-                const isCheapest = index === 0
-                return (
-                  <div key={item.storeId} className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm transition-all ${
-                    isCheapest ? 'cheapest' : 'bg-white border border-gray-100'
-                  }`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                      isCheapest ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500'
-                    }`}>{index + 1}</div>
-                    <div className="text-2xl shrink-0">{item.chain.logo}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-800 text-sm">{item.store.branch}</p>
-                      <p className="text-gray-400 text-xs truncate">{item.store.address}</p>
-                      <p className="text-gray-400 text-xs">{item.distance} ק"מ ממך</p>
-                    </div>
-                    <div className="text-left shrink-0">
-                      <p className={`text-2xl font-bold ${isCheapest ? 'text-emerald-700' : 'text-gray-800'}`}>
-                        ₪{item.price.toFixed(2)}
-                      </p>
-                      {isCheapest && (
-                        <span className="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">הכי זול! 🏆</span>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      )}
 
       {/* גרף היסטוריה — רק למוצרי דמו */}
       {history && (
