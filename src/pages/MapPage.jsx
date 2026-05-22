@@ -189,9 +189,9 @@ export default function MapPage() {
               style={selectedChains.has(key) ? { backgroundColor: chain.color } : {}}
             >
               <span>{chain.logo}</span>
-              <span className="hidden sm:inline">{chain.name}</span>
+              <span>{chain.name}</span>
               <span className={`text-xs ${selectedChains.has(key) ? 'text-white/80' : 'text-gray-400'}`}>
-                {count}
+                ({count})
               </span>
             </button>
           )
@@ -257,24 +257,26 @@ export default function MapPage() {
 
       {/* Legend */}
       {presentChainKeys.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-3 shadow-sm">
-          <p className="text-xs font-semibold text-gray-500 mb-2">מקרא צבעים</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
+          <p className="text-sm font-bold text-gray-700 mb-3">מקרא</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2">
             {presentChainKeys.map(key => {
               const chain = CHAIN_INFO[key] || { name: key, color: '#888', logo: '🏪' }
+              const count = stores.filter(s => s.chainKey === key).length
               return (
-                <div key={key} className="flex items-center gap-1.5">
+                <div key={key} className="flex items-center gap-2">
                   <span
-                    className="w-3 h-3 rounded-full shrink-0"
+                    className="w-4 h-4 rounded-full shrink-0 border-2 border-white shadow-sm"
                     style={{ backgroundColor: chain.color }}
                   />
-                  <span className="text-xs text-gray-600">{chain.logo} {chain.name}</span>
+                  <span className="text-sm text-gray-700 font-medium">{chain.logo} {chain.name}</span>
+                  <span className="text-xs text-gray-400 mr-auto">({count})</span>
                 </div>
               )
             })}
-            <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full shrink-0 bg-blue-500" />
-              <span className="text-xs text-gray-600">📍 המיקום שלך</span>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full shrink-0 bg-blue-500 border-2 border-white shadow-sm" />
+              <span className="text-sm text-gray-700 font-medium">📍 המיקום שלך</span>
             </div>
           </div>
         </div>
