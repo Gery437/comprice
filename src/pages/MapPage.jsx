@@ -21,6 +21,8 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 // Chain display info for chains that may come from Overpass and aren't in CHAINS
 const CHAIN_INFO = {
   ...Object.fromEntries(Object.entries(CHAINS).map(([k, v]) => [k, v])),
+  // yesh already defined in CHAINS as יש חסד — override with extended name
+  yesh:    { name: 'יש חסד / יש בשכונה', color: '#0891b2', logo: '💙' },
   mega:    { name: 'מגה', color: '#f97316', logo: '🏬' },
   victory: { name: 'ויקטורי', color: '#7c3aed', logo: '🏷️' },
   yeinot:  { name: 'יינות ביתן', color: '#b45309', logo: '🍷' },
