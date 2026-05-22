@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import { CHAINS } from '../lib/mockData'
+import { STORES as MOCK_STORES, CHAINS } from '../lib/mockData'
 import { getHomeLocation } from '../lib/locationStorage'
 
 const COMPRICE_API = 'https://comprice-api-production.up.railway.app'
@@ -28,10 +28,23 @@ const CHAIN_INFO = {
 
 export default function MapPage() {
   const [userLocation, setUserLocation] = useState(null)
-  const [stores, setStores] = useState([])
+  // Convert mock STORES to API format as immediate fallback
+  const mockStores = MOCK_STORES.map(s => ({
+    id: `mock_${s.id}`,
+    chainKey: s.chain,
+    name: s.branch,
+    address: s.address,
+    city: '',
+    lat: s.lat,
+    lng: s.lng,
+  }))
+
+  const [stores, setStores] = useState(mockStores)
   const [storesLoading, setStoresLoading] = useState(true)
+  const [realStoresLoaded, setRealStoresLoaded] = useState(false)
   const [selectedChains, setSelectedChains] = useState(() => new Set(Object.keys(CHAIN_INFO)))
   const [radius, setRadius] = useState(5)
+  const retryRef = useRef(null)
 
   // Resolve user location
   useEffect(() => {
@@ -50,19 +63,34 @@ export default function MapPage() {
     }
   }, [])
 
-  // Fetch real store locations from API
+  // Fetch real store locations from API — retry every 20s until ready
   useEffect(() => {
-    fetch(`${COMPRICE_API}/api/stores`)
-      .then(r => r.json())
-      .then(data => {
-        const s = data.stores || []
-        setStores(s)
-        // Auto-select only chains that have stores
-        const presentChains = new Set(s.map(st => st.chainKey))
-        setSelectedChains(presentChains)
-      })
-      .catch(() => {})
-      .finally(() => setStoresLoading(false))
+    let cancelled = false
+
+    async function loadStores() {
+      try {
+        const res = await fetch(`${COMPRICE_API}/api/stores`)
+        const data = await res.json()
+        if (cancelled) return
+
+        if (data.stores?.length > 0) {
+          setStores(data.stores)
+          const presentChains = new Set(data.stores.map(st => st.chainKey))
+          setSelectedChains(presentChains)
+          setRealStoresLoaded(true)
+          setStoresLoading(false)
+        } else {
+          // Server still scraping — retry in 20s
+          setStoresLoading(true)
+          retryRef.current = setTimeout(loadStores, 20000)
+        }
+      } catch {
+        if (!cancelled) retryRef.current = setTimeout(loadStores, 20000)
+      }
+    }
+
+    loadStores()
+    return () => { cancelled = true; clearTimeout(retryRef.current) }
   }, [])
 
   function toggleChain(key) {
@@ -103,17 +131,20 @@ export default function MapPage() {
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-xl font-bold text-gray-800">🗺️ מפת חנויות</h1>
         <div className="flex items-center gap-2">
-          {storesLoading && (
+          {storesLoading && !realStoresLoaded && (
             <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full animate-pulse">
-              טוען חנויות...
+              ⏳ מחפש חנויות אמיתיות...
+            </span>
+          )}
+          {realStoresLoaded && (
+            <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+              ✓ נתונים אמיתיים
             </span>
           )}
           <span className="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
             {visibleStores.length} חנויות בטווח
           </span>
-          {stores.length > 0 && (
-            <span className="text-xs text-gray-400">{stores.length} סה"כ</span>
-          )}
+          <span className="text-xs text-gray-400">{stores.length} סה"כ</span>
         </div>
       </div>
 
