@@ -75,16 +75,14 @@ export default function HomePage() {
     return /^\d{4,14}$/.test(q.trim())
   }
 
-  // הרחב קוד קצר לברקוד ישראלי מלא:
-  // ברקודים שמתחילים ב-729000 — אפשר להזין רק את הסיומת (4–7 ספרות)
+  // הרחב קוד קצר לברקוד ישראלי מלא (13 ספרות):
+  // קלט עד 7 ספרות → 729 + אפסים להשלמה + הקלט = 13 ספרות
+  // לדוגמה: "1234567" → "7290001234567" | "12345" → "7290000012345"
   function expandBarcode(q) {
     const s = q.trim()
-    if (s.length >= 8) return [s]  // כבר ברקוד מלא
-    // נסה להוסיף קידומת 729000 → ברקוד ישראלי 13 ספרות
-    const candidates = []
-    const withPrefix = '729000' + s
-    if (withPrefix.length >= 8 && withPrefix.length <= 14) candidates.push(withPrefix)
-    return candidates
+    if (s.length >= 8) return [s]  // ברקוד מלא — השאר כמות שהוא
+    const zeros = 10 - s.length   // 13 - 3 ("729") - אורך הקלט
+    return ['729' + '0'.repeat(zeros) + s]
   }
 
   // חיפוש
