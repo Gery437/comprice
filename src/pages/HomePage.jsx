@@ -62,9 +62,21 @@ export default function HomePage() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  // האם הקלט נראה כמו ברקוד (8–14 ספרות)
+  // האם הקלט נראה כמו ברקוד (4–14 ספרות)
   function isBarcode(q) {
-    return /^\d{8,14}$/.test(q.trim())
+    return /^\d{4,14}$/.test(q.trim())
+  }
+
+  // הרחב קוד קצר לברקוד ישראלי מלא:
+  // ברקודים שמתחילים ב-729000 — אפשר להזין רק את הסיומת (4–7 ספרות)
+  function expandBarcode(q) {
+    const s = q.trim()
+    if (s.length >= 8) return [s]  // כבר ברקוד מלא
+    // נסה להוסיף קידומת 729000 → ברקוד ישראלי 13 ספרות
+    const candidates = []
+    const withPrefix = '729000' + s
+    if (withPrefix.length >= 8 && withPrefix.length <= 14) candidates.push(withPrefix)
+    return candidates
   }
 
   // חיפוש
@@ -78,7 +90,7 @@ export default function HomePage() {
       return
     }
 
-    // אם זה ברקוד — חפש ישירות לפי ברקוד
+    // אם זה ברקוד (מלא או קצר) — חפש ישירות לפי ברקוד
     if (isBarcode(q)) {
       setSearching(true)
       setShowDropdown(true)
@@ -86,12 +98,21 @@ export default function HomePage() {
       debounceRef.current = setTimeout(async () => {
         try {
           const { getProductByBarcode } = await import('../lib/foodApi')
-          const product = await getProductByBarcode(q)
+          const candidates = expandBarcode(q)
+          let product = null
+          let resolvedBarcode = q
+
+          for (const bc of candidates) {
+            const p = await getProductByBarcode(bc)
+            if (p) { product = p; resolvedBarcode = bc; break }
+          }
+
           if (product) {
             setResults([product])
           } else {
-            // לא נמצא ב-Open Food Facts, אבל עדיין נציג אפשרות סריקה
-            setResults([{ id: `barcode_${q}`, barcode: q, name: `ברקוד: ${q}`, category: '', unit: '', image: '🔍', _directBarcode: true }])
+            // לא נמצא ב-Open Food Facts, אבל ממשיכים עם הברקוד הראשון
+            const bc = candidates[0] || q
+            setResults([{ id: `barcode_${bc}`, barcode: bc, name: `ברקוד: ${bc}`, category: '', unit: '', image: '🔍', _directBarcode: true }])
           }
         } catch {
           setResults([])
@@ -122,11 +143,16 @@ export default function HomePage() {
     return () => clearTimeout(debounceRef.current)
   }, [query, updateDropdownPos])
 
-  async function handleBarcodeDetected(barcode) {
+  async function handleBarcodeDetected(rawBarcode) {
     setShowScanner(false)
     setBarcodeLoading(true)
-    setQuery(barcode)
     setShowDropdown(false)
+
+    // הרחב ברקוד קצר לברקוד מלא אם צריך
+    const candidates = expandBarcode(rawBarcode)
+    const barcode = candidates[0] || rawBarcode
+    setQuery(barcode)
+
     const product = await getProductByBarcode(barcode)
     if (product) {
       navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
