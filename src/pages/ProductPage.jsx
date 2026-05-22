@@ -230,14 +230,14 @@ export default function ProductPage() {
       {savings > 0.1 && (
         <div className="bg-emerald-600 text-white rounded-2xl p-5 mb-6 text-center shadow-lg">
           <p className="text-emerald-200 text-sm mb-1">
-            {showRealView ? `חיסכון אפשרי בין חנויות בטווח ${radius} ק"מ` : 'חיסכון אפשרי בין הרשתות'}
+            חיסכון אפשרי בין חנויות בטווח {radius} ק"מ
           </p>
           <p className="text-4xl font-bold">₪{savings.toFixed(2)}</p>
         </div>
       )}
 
       {/* ── תצוגה אמיתית: חנויות + מחירים ── */}
-      {showRealView && (
+      {nearbyRealStores.length > 0 && (
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-lg font-bold text-gray-700">
