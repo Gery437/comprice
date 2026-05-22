@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import ProductPage from './pages/ProductPage'
 import ShoppingListPage from './pages/ShoppingListPage'
+import MapPage from './pages/MapPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/list" element={<ShoppingListPage />} />
+        <Route path="/map" element={<MapPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>

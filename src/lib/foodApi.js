@@ -6,6 +6,22 @@ const OFF_IL = 'https://il.openfoodfacts.org'
 const COMPRICE_API = 'https://comprice-api-production.up.railway.app'
 
 /**
+ * Get full product details (prices + name) from the ComPrice backend.
+ * Returns: { prices, name, found } or null on error.
+ */
+export async function getProductDetails(barcode) {
+  if (!barcode) return null
+  try {
+    const res = await fetch(`${COMPRICE_API}/api/prices/${barcode}`)
+    if (!res.ok) return null
+    const data = await res.json()
+    return { prices: data.prices || {}, name: data.name || null, found: data.found || false }
+  } catch {
+    return null
+  }
+}
+
+/**
  * Get real supermarket prices for a barcode.
  * Returns: { shufersal: 8.90, ramilevi: 7.50, ... } or null if not found.
  */

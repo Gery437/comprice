@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { searchFoodProducts, getProductByBarcode } from '../lib/foodApi'
+import { searchFoodProducts, getProductByBarcode, getProductDetails } from '../lib/foodApi'
 import { PRODUCTS, CHAINS, searchProducts } from '../lib/mockData'
 import { getHomeLocation, setHomeLocation, clearHomeLocation, geocodeAddress } from '../lib/locationStorage'
 import BarcodeScanner from '../components/BarcodeScanner'
@@ -113,26 +113,42 @@ export default function HomePage() {
 
       debounceRef.current = setTimeout(async () => {
         try {
-          const { getProductByBarcode } = await import('../lib/foodApi')
           const candidates = expandBarcode(q)
           let product = null
           let resolvedBarcode = q
 
-          for (const bc of candidates) {
-            const p = await getProductByBarcode(bc)
-            if (p) { product = p; resolvedBarcode = bc; break }
+          // Run OFF lookup and backend details in parallel for the first candidate
+          const bc = candidates[0] || q
+          const [offProduct, apiDetails] = await Promise.all([
+            (async () => {
+              for (const c of candidates) {
+                const p = await getProductByBarcode(c)
+                if (p) { resolvedBarcode = c; return p }
+              }
+              return null
+            })(),
+            getProductDetails(bc),
+          ])
+
+          if (offProduct) {
+            product = offProduct
+          } else if (apiDetails?.name) {
+            product = {
+              id: `barcode_${bc}`,
+              barcode: bc,
+              name: apiDetails.name,
+              category: '',
+              unit: '',
+              image: '🛒',
+              _directBarcode: true,
+            }
+          } else if (localMatch) {
+            product = localMatch
+          } else {
+            product = { id: `barcode_${bc}`, barcode: bc, name: `ברקוד: ${bc}`, category: '', unit: '', image: '🔍', _directBarcode: true }
           }
 
-          if (product) {
-            setResults([product])
-          } else if (localMatch) {
-            // נמצא רק מקומי — השאר אותו
-            setResults([localMatch])
-          } else {
-            // לא נמצא בשום מקום — הצג כניסת ברקוד עם השם הממומש
-            const bc = candidates[0] || q
-            setResults([{ id: `barcode_${bc}`, barcode: bc, name: `ברקוד: ${bc}`, category: '', unit: '', image: '🔍', _directBarcode: true }])
-          }
+          setResults([product])
         } catch {
           if (!localMatch) setResults([])
         }

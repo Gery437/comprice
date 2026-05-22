@@ -6,6 +6,7 @@ export default function Navbar() {
   const links = [
     { to: '/', label: 'בית', icon: '🏠' },
     { to: '/list', label: 'הרשימה שלי', icon: '🛒' },
+    { to: '/map', label: 'מפה', icon: '🗺️' },
   ]
 
   return (
