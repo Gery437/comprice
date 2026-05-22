@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import { STORES, CHAINS } from '../lib/mockData'
+import { CHAINS } from '../lib/mockData'
 import { getHomeLocation } from '../lib/locationStorage'
 
+const COMPRICE_API = 'https://comprice-api-production.up.railway.app'
 const TEL_AVIV = { lat: 32.0853, lng: 34.7818 }
 
 function haversineKm(lat1, lng1, lat2, lng2) {
@@ -12,45 +13,77 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   const dLng = ((lng2 - lng1) * Math.PI) / 180
   const a =
     Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLng / 2) ** 2
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+// Chain display info for chains that may come from Overpass and aren't in CHAINS
+const CHAIN_INFO = {
+  ...Object.fromEntries(Object.entries(CHAINS).map(([k, v]) => [k, v])),
+  mega:    { name: 'מגה', color: '#f97316', logo: '🏬' },
+  victory: { name: 'ויקטורי', color: '#7c3aed', logo: '🏷️' },
+  yeinot:  { name: 'יינות ביתן', color: '#b45309', logo: '🍷' },
 }
 
 export default function MapPage() {
   const [userLocation, setUserLocation] = useState(null)
-  const [selectedChains, setSelectedChains] = useState(() => new Set(Object.keys(CHAINS)))
+  const [stores, setStores] = useState([])
+  const [storesLoading, setStoresLoading] = useState(true)
+  const [selectedChains, setSelectedChains] = useState(() => new Set(Object.keys(CHAIN_INFO)))
   const [radius, setRadius] = useState(5)
 
+  // Resolve user location
   useEffect(() => {
-    // Try GPS first
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => {
-          // Fallback to saved home location
-          const home = getHomeLocation()
-          setUserLocation(home ? { lat: home.lat, lng: home.lng } : TEL_AVIV)
-        },
-        { timeout: 5000 }
-      )
-    } else {
+    const fallback = () => {
       const home = getHomeLocation()
       setUserLocation(home ? { lat: home.lat, lng: home.lng } : TEL_AVIV)
     }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        fallback,
+        { timeout: 5000 }
+      )
+    } else {
+      fallback()
+    }
+  }, [])
+
+  // Fetch real store locations from API
+  useEffect(() => {
+    fetch(`${COMPRICE_API}/api/stores`)
+      .then(r => r.json())
+      .then(data => {
+        const s = data.stores || []
+        setStores(s)
+        // Auto-select only chains that have stores
+        const presentChains = new Set(s.map(st => st.chainKey))
+        setSelectedChains(presentChains)
+      })
+      .catch(() => {})
+      .finally(() => setStoresLoading(false))
   }, [])
 
   function toggleChain(key) {
-    setSelectedChains((prev) => {
+    setSelectedChains(prev => {
       const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
+      if (next.has(key)) { next.delete(key) } else { next.add(key) }
       return next
     })
   }
 
+  function toggleAllChains() {
+    const all = new Set(stores.map(s => s.chainKey))
+    if (selectedChains.size === all.size) setSelectedChains(new Set())
+    else setSelectedChains(all)
+  }
+
+  const presentChainKeys = [...new Set(stores.map(s => s.chainKey))].sort()
+
   const visibleStores = userLocation
-    ? STORES.filter((s) => {
-        if (!selectedChains.has(s.chain)) return false
+    ? stores.filter(s => {
+        if (!selectedChains.has(s.chainKey)) return false
         const dist = haversineKm(userLocation.lat, userLocation.lng, s.lat, s.lng)
         return dist <= radius
       })
@@ -59,44 +92,35 @@ export default function MapPage() {
   if (!userLocation) {
     return (
       <div dir="rtl" className="flex items-center justify-center h-64">
-        <span className="text-gray-400 text-lg">מאתר מיקום...</span>
+        <span className="text-gray-400 text-lg animate-pulse">מאתר מיקום...</span>
       </div>
     )
   }
 
   return (
-    <div dir="rtl" className="flex flex-col gap-4">
+    <div dir="rtl" className="flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h1 className="text-2xl font-bold text-gray-800">מפת חנויות</h1>
-        <span className="text-sm text-gray-500 bg-emerald-50 px-3 py-1 rounded-full font-medium">
-          {visibleStores.length} חנויות בטווח
-        </span>
-      </div>
-
-      {/* Chain filter chips */}
-      <div className="flex flex-wrap gap-2">
-        {Object.entries(CHAINS).map(([key, chain]) => (
-          <button
-            key={key}
-            onClick={() => toggleChain(key)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
-              selectedChains.has(key)
-                ? 'text-white border-transparent shadow-sm'
-                : 'bg-white text-gray-400 border-gray-200'
-            }`}
-            style={selectedChains.has(key) ? { backgroundColor: chain.color, borderColor: chain.color } : {}}
-          >
-            <span>{chain.logo}</span>
-            <span className="hidden sm:inline">{chain.name}</span>
-          </button>
-        ))}
+        <h1 className="text-xl font-bold text-gray-800">🗺️ מפת חנויות</h1>
+        <div className="flex items-center gap-2">
+          {storesLoading && (
+            <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full animate-pulse">
+              טוען חנויות...
+            </span>
+          )}
+          <span className="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
+            {visibleStores.length} חנויות בטווח
+          </span>
+          {stores.length > 0 && (
+            <span className="text-xs text-gray-400">{stores.length} סה"כ</span>
+          )}
+        </div>
       </div>
 
       {/* Radius buttons */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-gray-500 text-sm font-medium">טווח:</span>
-        {[2, 5, 10, 20].map((r) => (
+        <span className="text-gray-500 text-sm font-medium">📍 טווח:</span>
+        {[2, 5, 10, 20].map(r => (
           <button
             key={r}
             onClick={() => setRadius(r)}
@@ -111,11 +135,43 @@ export default function MapPage() {
         ))}
       </div>
 
+      {/* Chain filter chips */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <button
+          onClick={toggleAllChains}
+          className="text-xs text-gray-500 underline underline-offset-2 shrink-0"
+        >
+          {selectedChains.size === presentChainKeys.length ? 'בטל הכל' : 'בחר הכל'}
+        </button>
+        {presentChainKeys.map(key => {
+          const chain = CHAIN_INFO[key] || { name: key, color: '#888', logo: '🏪' }
+          const count = stores.filter(s => s.chainKey === key).length
+          return (
+            <button
+              key={key}
+              onClick={() => toggleChain(key)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                selectedChains.has(key)
+                  ? 'text-white border-transparent shadow-sm'
+                  : 'bg-white text-gray-400 border-gray-200'
+              }`}
+              style={selectedChains.has(key) ? { backgroundColor: chain.color } : {}}
+            >
+              <span>{chain.logo}</span>
+              <span className="hidden sm:inline">{chain.name}</span>
+              <span className={`text-xs ${selectedChains.has(key) ? 'text-white/80' : 'text-gray-400'}`}>
+                {count}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
       {/* Map */}
-      <div style={{ height: 'calc(100vh - 340px)', minHeight: 300 }} className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+      <div style={{ height: 'calc(100vh - 360px)', minHeight: 320 }} className="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
         <MapContainer
           center={[userLocation.lat, userLocation.lng]}
-          zoom={12}
+          zoom={13}
           style={{ height: '100%', width: '100%' }}
         >
           <TileLayer
@@ -127,31 +183,39 @@ export default function MapPage() {
           <CircleMarker
             center={[userLocation.lat, userLocation.lng]}
             radius={10}
-            pathOptions={{ color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 0.9 }}
+            pathOptions={{ color: '#1d4ed8', fillColor: '#3b82f6', fillOpacity: 0.9, weight: 2 }}
           >
-            <Popup>המיקום שלך</Popup>
+            <Popup>
+              <div dir="rtl" className="text-center">
+                <p className="font-bold text-sm">📍 המיקום שלך</p>
+              </div>
+            </Popup>
           </CircleMarker>
 
           {/* Stores */}
-          {visibleStores.map((store) => {
-            const chain = CHAINS[store.chain]
+          {visibleStores.map(store => {
+            const chain = CHAIN_INFO[store.chainKey] || { name: store.chainKey, color: '#888', logo: '🏪' }
+            const dist = haversineKm(userLocation.lat, userLocation.lng, store.lat, store.lng)
             return (
               <CircleMarker
                 key={store.id}
                 center={[store.lat, store.lng]}
                 radius={8}
                 pathOptions={{
-                  color: chain?.color || '#666',
-                  fillColor: chain?.color || '#666',
-                  fillOpacity: 0.8,
+                  color: chain.color,
+                  fillColor: chain.color,
+                  fillOpacity: 0.85,
+                  weight: 1.5,
                 }}
               >
                 <Popup>
-                  <div className="text-right" dir="rtl">
-                    <p className="font-bold text-sm">
-                      {chain?.logo} {store.branch}
+                  <div dir="rtl" style={{ minWidth: 160 }}>
+                    <p className="font-bold text-sm">{chain.logo} {store.name}</p>
+                    {store.address && <p className="text-gray-500 text-xs mt-0.5">{store.address}</p>}
+                    {store.city && <p className="text-gray-500 text-xs">{store.city}</p>}
+                    <p className="text-emerald-600 text-xs font-medium mt-1">
+                      {dist.toFixed(1)} ק"מ ממך
                     </p>
-                    <p className="text-gray-500 text-xs mt-1">{store.address}</p>
                   </div>
                 </Popup>
               </CircleMarker>
@@ -159,6 +223,31 @@ export default function MapPage() {
           })}
         </MapContainer>
       </div>
+
+      {/* Legend */}
+      {presentChainKeys.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-3 shadow-sm">
+          <p className="text-xs font-semibold text-gray-500 mb-2">מקרא צבעים</p>
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            {presentChainKeys.map(key => {
+              const chain = CHAIN_INFO[key] || { name: key, color: '#888', logo: '🏪' }
+              return (
+                <div key={key} className="flex items-center gap-1.5">
+                  <span
+                    className="w-3 h-3 rounded-full shrink-0"
+                    style={{ backgroundColor: chain.color }}
+                  />
+                  <span className="text-xs text-gray-600">{chain.logo} {chain.name}</span>
+                </div>
+              )
+            })}
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full shrink-0 bg-blue-500" />
+              <span className="text-xs text-gray-600">📍 המיקום שלך</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
