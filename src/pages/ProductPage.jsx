@@ -79,10 +79,19 @@ export default function ProductPage() {
         }
       }
 
-      // 3. אחרת נסה ברקוד ב-API
-      if (!foundProduct && id.startsWith('off_')) {
-        const barcode = id.replace('off_', '')
-        foundProduct = await getProductByBarcode(barcode)
+      // 3. אחרת נסה ברקוד ב-API (off_ מ-Open Food Facts, barcode_ מהזנה ישירה)
+      if (!foundProduct && (id.startsWith('off_') || id.startsWith('barcode_'))) {
+        const barcode = id.replace('off_', '').replace('barcode_', '')
+        const apiProduct = await getProductByBarcode(barcode)
+        foundProduct = apiProduct || {
+          id: `barcode_${barcode}`,
+          barcode,
+          name: `מוצר ${barcode}`,
+          category: 'מוצר כללי',
+          unit: 'יחידה',
+          image: '🛒',
+          source: 'direct',
+        }
       }
 
       if (!foundProduct) {
@@ -194,9 +203,14 @@ export default function ProductPage() {
           </div>
         )}
 
-        {!isNumericId && !realPrices && (
+        {!isNumericId && !realPrices && product.source !== 'direct' && (
           <div className="mt-3 bg-blue-50 border border-blue-200 text-blue-700 text-sm px-4 py-2 rounded-xl">
             💡 המחירים לדוגמה — חיבור למחירים אמיתיים בקרוב
+          </div>
+        )}
+        {!isNumericId && !realPrices && product.source === 'direct' && (
+          <div className="mt-3 bg-amber-50 border border-amber-200 text-amber-700 text-sm px-4 py-2 rounded-xl">
+            🔍 לא נמצאו מחירים עבור ברקוד זה ברשתות השמורות
           </div>
         )}
       </Card>

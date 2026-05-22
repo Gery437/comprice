@@ -62,17 +62,46 @@ export default function HomePage() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
+  // האם הקלט נראה כמו ברקוד (8–14 ספרות)
+  function isBarcode(q) {
+    return /^\d{8,14}$/.test(q.trim())
+  }
+
   // חיפוש
   useEffect(() => {
     clearTimeout(debounceRef.current)
+    const q = query.trim()
 
-    if (query.trim().length < 2) {
+    if (q.length < 2) {
       setResults([])
       setShowDropdown(false)
       return
     }
 
-    // תוצאות מיידיות מהמאגר המקומי
+    // אם זה ברקוד — חפש ישירות לפי ברקוד
+    if (isBarcode(q)) {
+      setSearching(true)
+      setShowDropdown(true)
+      updateDropdownPos()
+      debounceRef.current = setTimeout(async () => {
+        try {
+          const { getProductByBarcode } = await import('../lib/foodApi')
+          const product = await getProductByBarcode(q)
+          if (product) {
+            setResults([product])
+          } else {
+            // לא נמצא ב-Open Food Facts, אבל עדיין נציג אפשרות סריקה
+            setResults([{ id: `barcode_${q}`, barcode: q, name: `ברקוד: ${q}`, category: '', unit: '', image: '🔍', _directBarcode: true }])
+          }
+        } catch {
+          setResults([])
+        }
+        setSearching(false)
+      }, 300)
+      return () => clearTimeout(debounceRef.current)
+    }
+
+    // חיפוש טקסט רגיל
     const localResults = searchProducts(query).map((p) => ({ ...p, source: 'local' }))
     setResults(localResults.slice(0, 10))
     setShowDropdown(true)
@@ -97,15 +126,37 @@ export default function HomePage() {
     setShowScanner(false)
     setBarcodeLoading(true)
     setQuery(barcode)
+    setShowDropdown(false)
     const product = await getProductByBarcode(barcode)
-    if (product) navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
+    if (product) {
+      navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
+    } else {
+      // לא נמצא ב-Open Food Facts — נצור מוצר מינימלי ונעבור לדף המחירים
+      navigate(`/product/barcode_${barcode}?radius=${radius}`, {
+        state: { product: { id: `barcode_${barcode}`, barcode, name: `מוצר ${barcode}`, category: '', unit: 'יחידה', image: '🛒' } }
+      })
+    }
     setBarcodeLoading(false)
   }
 
   function goToProduct(product) {
     setShowDropdown(false)
     setQuery('')
+    // מוצר שנמצא דרך חיפוש ברקוד ישיר
+    if (product._directBarcode) {
+      handleBarcodeDetected(product.barcode)
+      return
+    }
     navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
+  }
+
+  // Enter — חיפוש ישיר לפי ברקוד
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' && isBarcode(query)) {
+      e.preventDefault()
+      setShowDropdown(false)
+      handleBarcodeDetected(query.trim())
+    }
   }
 
   return (
@@ -148,10 +199,16 @@ export default function HomePage() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             onFocus={() => { if (results.length > 0) { setShowDropdown(true); updateDropdownPos() } }}
             placeholder="חפש מוצר לפי שם, מותג או ברקוד..."
             className="w-full pr-12 pl-4 py-4 rounded-2xl border-2 border-gray-200 focus:border-emerald-400 focus:outline-none text-lg shadow-sm bg-white transition-colors"
           />
+          {isBarcode(query) && (
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs text-emerald-600 font-medium pointer-events-none">
+              Enter ↵
+            </span>
+          )}
         </div>
         <Button
           onClick={() => setShowScanner(true)}
