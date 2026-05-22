@@ -236,6 +236,49 @@ export default function ProductPage() {
         </div>
       )}
 
+      {/* ── אין חנויות בטווח אבל יש מחירים — השוואת רשתות ── */}
+      {realPrices && Object.keys(realPrices).length > 0 && nearbyRealStores.length === 0 && !pricesLoading && (() => {
+        const entries = Object.entries(realPrices).sort((a, b) => a[1] - b[1])
+        const maxPrice = entries[entries.length - 1]?.[1] ?? 0
+        const minPrice = entries[0]?.[1] ?? 0
+        const chainSavings = entries.length > 1 ? maxPrice - minPrice : 0
+        return (
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <h2 className="text-lg font-bold text-gray-700">💰 מחיר לפי רשת</h2>
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">אמיתי</span>
+              <span className="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">⏳ חנויות טוענות...</span>
+            </div>
+            {chainSavings > 0.1 && (
+              <div className="bg-emerald-600 text-white rounded-2xl p-4 mb-4 text-center shadow-lg">
+                <p className="text-emerald-200 text-sm mb-1">חיסכון בין הרשתות</p>
+                <p className="text-3xl font-bold">₪{chainSavings.toFixed(2)}</p>
+              </div>
+            )}
+            <div className="space-y-3">
+              {entries.map(([chainKey, price], index) => {
+                const chain = CHAINS[chainKey]
+                if (!chain) return null
+                const isCheapest = index === 0
+                return (
+                  <div key={chainKey} className={`rounded-2xl p-4 flex items-center gap-4 shadow-sm ${isCheapest ? 'cheapest' : 'bg-white border border-gray-100'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${isCheapest ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-500'}`}>{index + 1}</div>
+                    <div className="text-2xl shrink-0">{chain.logo}</div>
+                    <div className="flex-1">
+                      <p className="font-bold text-gray-800">{chain.name}</p>
+                    </div>
+                    <div className="text-left shrink-0">
+                      <p className={`text-2xl font-bold ${isCheapest ? 'text-emerald-700' : 'text-gray-800'}`}>₪{price.toFixed(2)}</p>
+                      {isCheapest && <span className="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">הכי זול! 🏆</span>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
+
       {/* ── תצוגה אמיתית: חנויות + מחירים ── */}
       {nearbyRealStores.length > 0 && (
         <div className="mb-6">
