@@ -269,13 +269,23 @@ export default function ProductPage() {
                     )}
                     <p className="text-gray-400 text-xs">{store.distance} ק"מ ממך</p>
                   </div>
-                  <div className="text-left shrink-0">
+                  <div className="text-left shrink-0 flex flex-col items-end gap-1.5">
                     <p className={`text-2xl font-bold ${isCheapest ? 'text-emerald-700' : 'text-gray-800'}`}>
                       ₪{store.price.toFixed(2)}
                     </p>
                     {isCheapest && (
                       <span className="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">הכי זול! 🏆</span>
                     )}
+                    <a
+                      href={`https://waze.com/ul?ll=${store.lat},${store.lng}&navigate=yes`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-xs bg-[#05c8f7] hover:bg-[#00b0d8] text-white font-semibold px-2 py-1 rounded-lg transition-colors"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <img src="https://www.waze.com/favicon.ico" alt="Waze" className="w-3.5 h-3.5" />
+                      Waze
+                    </a>
                   </div>
                 </div>
               )
