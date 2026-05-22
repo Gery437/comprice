@@ -103,6 +103,14 @@ export default function HomePage() {
       setSearching(true)
       setShowDropdown(true)
       updateDropdownPos()
+
+      // הצג מיד תוצאה מהמאגר המקומי אם קיימת (לפני קריאת ה-API)
+      const candidatesImmediate = expandBarcode(q)
+      const localMatch = PRODUCTS.find(p =>
+        candidatesImmediate.some(bc => p.barcode === bc) || p.barcode === q
+      )
+      if (localMatch) setResults([localMatch])
+
       debounceRef.current = setTimeout(async () => {
         try {
           const { getProductByBarcode } = await import('../lib/foodApi')
@@ -117,13 +125,16 @@ export default function HomePage() {
 
           if (product) {
             setResults([product])
+          } else if (localMatch) {
+            // נמצא רק מקומי — השאר אותו
+            setResults([localMatch])
           } else {
-            // לא נמצא ב-Open Food Facts, אבל ממשיכים עם הברקוד הראשון
+            // לא נמצא בשום מקום — הצג כניסת ברקוד עם השם הממומש
             const bc = candidates[0] || q
             setResults([{ id: `barcode_${bc}`, barcode: bc, name: `ברקוד: ${bc}`, category: '', unit: '', image: '🔍', _directBarcode: true }])
           }
         } catch {
-          setResults([])
+          if (!localMatch) setResults([])
         }
         setSearching(false)
       }, 300)
@@ -165,9 +176,18 @@ export default function HomePage() {
     if (product) {
       navigate(`/product/${product.id}?radius=${radius}`, { state: { product } })
     } else {
-      // לא נמצא ב-Open Food Facts — נצור מוצר מינימלי ונעבור לדף המחירים
-      navigate(`/product/barcode_${barcode}?radius=${radius}`, {
-        state: { product: { id: `barcode_${barcode}`, barcode, name: `מוצר ${barcode}`, category: '', unit: 'יחידה', image: '🛒' } }
+      // לא נמצא ב-OFF — בדוק במאגר המקומי
+      const localMatch = PRODUCTS.find(p => p.barcode === barcode)
+      const fallback = localMatch || {
+        id: `barcode_${barcode}`,
+        barcode,
+        name: `מוצר ${barcode}`,
+        category: '',
+        unit: 'יחידה',
+        image: '🛒',
+      }
+      navigate(`/product/${fallback.id ?? `barcode_${barcode}`}?radius=${radius}`, {
+        state: { product: fallback }
       })
     }
     setBarcodeLoading(false)
