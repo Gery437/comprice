@@ -262,7 +262,11 @@ export default function ProductPage() {
                   <div className="text-2xl shrink-0">{chain.logo}</div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-gray-800 text-sm">{store.name}</p>
-                    {store.address && <p className="text-gray-400 text-xs truncate">{store.address}{store.city ? `, ${store.city}` : ''}</p>}
+                    {(store.address || store.city) && (
+                      <p className="text-gray-500 text-xs truncate">
+                        {[store.address, store.city].filter(Boolean).join(', ')}
+                      </p>
+                    )}
                     <p className="text-gray-400 text-xs">{store.distance} ק"מ ממך</p>
                   </div>
                   <div className="text-left shrink-0">
