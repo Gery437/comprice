@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { searchFoodProducts, getProductByBarcode } from '../lib/foodApi'
 import { PRODUCTS, CHAINS, searchProducts } from '../lib/mockData'
+import { getHomeLocation, setHomeLocation, clearHomeLocation, geocodeAddress } from '../lib/locationStorage'
 import BarcodeScanner from '../components/BarcodeScanner'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
@@ -17,6 +18,13 @@ export default function HomePage() {
   const [barcodeLoading, setBarcodeLoading] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const [dropdownStyle, setDropdownStyle] = useState({})
+
+  // מיקום בית
+  const [homeLocation, setHomeLocationState] = useState(() => getHomeLocation())
+  const [showLocationForm, setShowLocationForm] = useState(false)
+  const [locationInput, setLocationInput] = useState('')
+  const [locationSaving, setLocationSaving] = useState(false)
+  const [locationError, setLocationErrorState] = useState('')
 
   const debounceRef = useRef(null)
   const navigate = useNavigate()
@@ -185,6 +193,21 @@ export default function HomePage() {
     }
   }
 
+  async function handleSaveLocation() {
+    if (!locationInput.trim()) return
+    setLocationSaving(true)
+    setLocationErrorState('')
+    try {
+      const loc = await geocodeAddress(locationInput.trim())
+      setHomeLocation(loc)
+      setHomeLocationState(loc)
+      setShowLocationForm(false)
+    } catch (err) {
+      setLocationErrorState(err.message)
+    }
+    setLocationSaving(false)
+  }
+
   return (
     <div dir="rtl">
       {/* Hero */}
@@ -210,6 +233,70 @@ export default function HomePage() {
             {r} ק"מ
           </button>
         ))}
+      </div>
+
+      {/* מיקום בית */}
+      <div className="mb-5">
+        {!showLocationForm ? (
+          <div className="flex items-center justify-center gap-2 text-sm flex-wrap">
+            {homeLocation ? (
+              <>
+                <span className="text-gray-500">🏠 {homeLocation.label}</span>
+                <button
+                  onClick={() => { setLocationInput(homeLocation.label); setShowLocationForm(true); setLocationErrorState('') }}
+                  className="text-emerald-600 underline underline-offset-2 text-xs"
+                >
+                  שנה
+                </button>
+                <button
+                  onClick={() => { clearHomeLocation(); setHomeLocationState(null) }}
+                  className="text-red-400 underline underline-offset-2 text-xs"
+                >
+                  הסר
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => { setLocationInput(''); setShowLocationForm(true); setLocationErrorState('') }}
+                className="text-gray-400 hover:text-emerald-600 text-sm flex items-center gap-1 transition-colors"
+              >
+                <span>📍</span>
+                <span>הגדר מיקום בית (לשימוש כשאין GPS)</span>
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white border border-emerald-200 rounded-2xl p-4 shadow-sm max-w-md mx-auto">
+            <p className="text-sm font-semibold text-gray-700 mb-2">📍 מיקום בית / עיר וכתובת</p>
+            <input
+              type="text"
+              value={locationInput}
+              onChange={(e) => setLocationInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSaveLocation()}
+              placeholder="לדוגמה: רחוב הרצל 5, תל אביב"
+              className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:border-emerald-400 focus:outline-none text-sm mb-2"
+              autoFocus
+            />
+            {locationError && (
+              <p className="text-red-500 text-xs mb-2">{locationError}</p>
+            )}
+            <div className="flex gap-2">
+              <button
+                onClick={handleSaveLocation}
+                disabled={locationSaving || !locationInput.trim()}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-semibold py-2 rounded-xl transition-colors"
+              >
+                {locationSaving ? '⏳ מחפש...' : 'שמור'}
+              </button>
+              <button
+                onClick={() => setShowLocationForm(false)}
+                className="px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* שורת חיפוש */}

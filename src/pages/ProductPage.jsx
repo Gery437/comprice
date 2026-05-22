@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { PRODUCTS, CHAINS, STORES, PRICES, PRICE_HISTORY, calcDistance } from '../lib/mockData'
+import { getHomeLocation } from '../lib/locationStorage'
 import { getProductByBarcode, getRealPrices } from '../lib/foodApi'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -117,16 +118,22 @@ export default function ProductPage() {
       // בקשת מיקום
       const tryGetLocation = () =>
         new Promise((resolve) => {
-          if (!navigator.geolocation) {
-            resolve({ lat: 32.0853, lng: 34.7818 })
-            return
+          const fallback = () => {
+            const home = getHomeLocation()
+            if (home) {
+              setLocationError(`📍 משתמש במיקום בית: ${home.label}`)
+              resolve({ lat: home.lat, lng: home.lng })
+            } else {
+              setLocationError('⚠️ GPS לא זמין — משתמש במיקום ברירת מחדל (תל אביב). הגדר מיקום בית בדף הראשי.')
+              resolve({ lat: 32.0853, lng: 34.7818 })
+            }
           }
+
+          if (!navigator.geolocation) { fallback(); return }
+
           navigator.geolocation.getCurrentPosition(
             (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-            () => {
-              setLocationError('משתמש במיקום ברירת מחדל (תל אביב)')
-              resolve({ lat: 32.0853, lng: 34.7818 })
-            },
+            fallback,
             { timeout: 5000 }
           )
         })
